@@ -5,26 +5,61 @@ const Home = () => {
   const products = [
     {
       id: 1,
-      name: 'Product 1',
-      description: 'This is the description of Product 1.',
+      name: 'WOXEN jacket',
+      description: 'Men regular solid jacket',
       price: '$99',
-      image: 'https://via.placeholder.com/150'
+      image: 'https://t.ly/7YEsg'
     },
     {
       id: 2,
-      name: 'Product 2',
-      description: 'This is the description of Product 2.',
+      name: 'Puma cap',
+      description: 'Blue color cap',
       price: '$199',
-      image: 'https://via.placeholder.com/150'
+      image: 'https://t.ly/V1D2U'
     },
     {
       id: 3,
-      name: 'Product 3',
-      description: 'This is the description of Product 3.',
+      name: 'Lugaz man T-shirt',
+      description: 'Green T-shirt',
       price: '$299',
-      image: 'https://via.placeholder.com/150'
+      image: 'https://i.ibb.co/gwcWTxL/1-20.jpg'
     },
     // Add more products here...
+    {
+        id: 4,
+        name: 'Denim pants',
+        description: 'Black pant',
+        price: '$200',
+        image: 'https://t.ly/QTpRX'
+    },
+    {
+        id: 5,
+        name: 'Plaid Shirt',
+        description: 'Black variant shirt',
+        price: '$50',
+        image: 'https://t.ly/PYih_'
+    },
+    {
+        id: 6,
+        name: 'Plain T-shirt',
+        description: 'Plain coloured shirt',
+        price: '$20',
+        image: 'https://in.mt/7iE'
+    },
+    {
+        id: 7,
+        name: 'Hoodie',
+        description: 'Colors: Black, Mélange Grey',
+        price: '$100',
+        image: 'https://in.mt/7iF'
+    },
+    {
+        id: 8,
+        name: 'Ribbed Parallel Trouser',
+        description: 'Colors: Khaki, Black, Peach, Cream',
+        price: '$10',
+        image: 'https://in.mt/7iG'
+    }
   ];
 
   return (
