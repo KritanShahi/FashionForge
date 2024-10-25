@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import seluImage from './selu.jpg';
+
 
 const Home = () => {
   const products = [
@@ -59,7 +61,13 @@ const Home = () => {
         description: 'Colors: Khaki, Black, Peach, Cream',
         price: '$10',
         image: 'https://in.mt/7iG'
-    }
+    },{
+      id: 9,
+      name: 'Selisha',
+      description: 'Plain coloured shirt',
+      price: '$20',
+      image: seluImage
+  }
   ];
 
   return (
