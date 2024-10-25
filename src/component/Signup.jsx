@@ -1,4 +1,148 @@
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
+const SignupContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+`;
+
+const Form = styled.form`
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const FilterText = styled.span`
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+`;
+
+const Signup = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    isAdmin: false, // default to 'user'
+  });
+  const [error, setError] = useState('');
+  const navigate = useNavigate(); 
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8080/api/signup', formData);
+      console.log('Registration successful:', response.data);
+      if (formData.isAdmin === "true" || formData.isAdmin === true) {
+        navigate('/admin'); // Redirect to admin home page
+      } else {
+        navigate('/home'); // Redirect to user home page
+      }
+      // Handle successful registration (e.g., redirect or display success message)
+    } catch (error) {
+      console.error('Registration error:', error.response?.data || error.message);
+      setError('Registration failed. Please try again.');
+    }
+  };
+
+  return (
+    <SignupContainer>
+      <h2>Sign Up</h2>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+     
+
+        <FilterText>Choice:</FilterText>
+        <Select
+          name="isAdmin"
+          value={formData.isAdmin}
+          onChange={handleChange}
+        >
+          <option value="" disabled>Select user type</option>
+          <option value="true">Admin</option>
+          <option value="false">User</option>
+        </Select>
+
+        <Input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        <Button type="submit">Sign Up</Button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      </Form>
+    </SignupContainer>
+  );
+};
+
+export default Signup;
+
+
+
+
+
+/*
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -16,7 +160,7 @@ const Form = styled.form`
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 300px; /* Set a fixed width for better alignment */
+  width: 300px; /* Set a fixed width for better alignment *//*
 `;
 
 const Input = styled.input`
@@ -120,5 +264,5 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signup;*/
 
