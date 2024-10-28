@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import seluImage from './selu.jpg';
+
 
 
 const Home = () => {
