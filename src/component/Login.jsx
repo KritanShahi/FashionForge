@@ -1,7 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-
+import { Link } from 'react-router-dom';
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/apiCalls";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 const Container=styled.div`
 width:100vw;
@@ -45,12 +50,12 @@ margin-bottom:10px;
   color: green;
   cursor: not-allowed;
 }
-`
+`/*
 const Link=styled.a`
 margin:5px 0px;
 font-size:12px;
 text-decoration:underline;
-cursor:pointer`
+cursor:pointer`;*/
 
 const Error = styled.span`
   color: red;
@@ -59,11 +64,38 @@ const Error = styled.span`
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const dispatch = useDispatch();
+  const { isFetching, error } = useSelector((state) => state.user);
+  //const navigate = useNavigate(); 
 
   const handleClick = (e) => {
+    try{
     e.preventDefault();
+    login(dispatch, { username, password });
+
+  } catch (err) {
+    console.error("Login error:", err); // This will provide more context for the error.
+  
+  }
   };
+
+  /*
+  const handleClick = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8080/api/login', { username, password });
+      console.log('Registration successful:', response.data);
+  
+        navigate('/home'); // Redirect to user home page
+    
+      // Handle successful registration (e.g., redirect or display success message)
+    } catch (error) {
+      console.error('Registration error:', error.response?.data || error.message);
+     
+    }
+  };*/
+
+
   return (
     <Container>
       
@@ -74,10 +106,9 @@ function Login() {
 <Input placeholder="username" onChange={(e) => setUsername(e.target.value)}></Input>
 <Input placeholder="password"   type="password"
             onChange={(e) => setPassword(e.target.value)}></Input>
-<Button onClick={handleClick} >LOGIN</Button>
-
-<Link>DO NOT YOU REMEBER THE PASSWORD</Link>
-<Link>CREATE A NEW ACCOUNT </Link>
+            {error && <Error>Something went wrong...</Error>}
+<Button onClick={handleClick}   disabled={isFetching} >LOGIN</Button>
+<Link to='/signup'>CREATE A NEW ACCOUNT </Link>
 
 </Form>
 </Wrapper>
