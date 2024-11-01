@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const SignupContainer = styled.div`
   display: flex;
@@ -131,7 +132,10 @@ const Signup = () => {
         />
         <Button type="submit">Sign Up</Button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
+        <Link to='/login'>Already have an Account</Link>
       </Form>
+
+
     </SignupContainer>
   );
 };
