@@ -62,35 +62,7 @@ const Container = styled.div`
   padding: 20px;
 `;
 
-// const MessageTable = styled.table`
-//   width: 100%;
-//   border-collapse: collapse;
-//   margin-top: 20px;
 
-//   th, td {
-//     padding: 10px;
-//     border: 1px solid #ddd;
-//     text-align: left;
-//   }
-
-//   th {
-//     background-color: #eef2ff;
-//   }
-// `;
-
-// const ActionButton = styled.button`
-//   padding: 5px 10px;
-//   margin: 0 5px;
-//   background-color: #4caf50;
-//   color: white;
-//   border: none;
-//   border-radius: 3px;
-//   cursor: pointer;
-//   &:hover {
-//     background-color: #45a049;
-//   }
-// `;
-// ActionButton and Table updates
 const ActionButton = styled.button`
   padding: 5px 10px;
   margin: 2px; /* Reduced margin to avoid too much spacing */
