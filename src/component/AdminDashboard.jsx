@@ -14,7 +14,7 @@ const AdminDashboard = () => {
           <SidebarItem onClick={() => navigate('/admin/product')}>Product Management</SidebarItem>
           <SidebarItem onClick={() => navigate('/admin/customer')}>Customer Management</SidebarItem>
           <SidebarItem onClick={() => navigate('/admin/message')}>Messages</SidebarItem>
-          <SidebarItem onClick={() => console.log("Navigate to Share")}>Transactions</SidebarItem>
+          {/* <SidebarItem onClick={() => console.log("Navigate to transaction")}>Transactions</SidebarItem> */}
         </SidebarMenu>
         <SidebarFooter>
 
@@ -24,7 +24,7 @@ const AdminDashboard = () => {
 
       <Content>
         <TopNavBar>
-          <SearchBar placeholder="Search here..." />
+          {/* <SearchBar placeholder="Search here..." /> */}
           <Profile>
             <ProfileName>Admin</ProfileName>
             <ProfileImage src="https://tse4.mm.bing.net/th?id=OIG3.9vucNfp64foDhbSJD8nT&pid=ImgGn" alt="Profile" />
@@ -104,13 +104,13 @@ const TopNavBar = styled.div`
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
-const SearchBar = styled.input`
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: #f4f5fc;
-  outline: none;
-`;
+// const SearchBar = styled.input`
+//   padding: 8px 12px;
+//   border: none;
+//   border-radius: 8px;
+//   background-color: #f4f5fc;
+//   outline: none;
+// `;
 
 const Profile = styled.div`
   display: flex;
