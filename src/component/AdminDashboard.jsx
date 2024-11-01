@@ -13,7 +13,7 @@ const AdminDashboard = () => {
           <SidebarItem onClick={() => navigate('/admin/order')}>Order Management</SidebarItem>
           <SidebarItem onClick={() => navigate('/admin/product')}>Product Management</SidebarItem>
           <SidebarItem onClick={() => navigate('/admin/customer')}>Customer Management</SidebarItem>
-          <SidebarItem onClick={() => console.log("Navigate to Comments")}>Messages</SidebarItem>
+          <SidebarItem onClick={() => navigate('/admin/message')}>Messages</SidebarItem>
           <SidebarItem onClick={() => console.log("Navigate to Share")}>Transactions</SidebarItem>
         </SidebarMenu>
         <SidebarFooter>

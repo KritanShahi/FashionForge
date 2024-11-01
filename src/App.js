@@ -7,6 +7,7 @@ import Dashboard from './component/Dashboard'; // Import Dashboard component
 import CustomerManagement from './component/CustomerManagement';
 import OrderManagement from './component/OrderManagement';
 import ProductManagement from './component/ProductManagement';
+import MessageDashboard from './component/MessageDashboard';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="customer" element={<CustomerManagement />} />
           <Route path="order" element={<OrderManagement />} />
           <Route path="product" element={<ProductManagement />} />
+          <Route path="message" element={<MessageDashboard/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
