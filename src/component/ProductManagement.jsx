@@ -28,6 +28,17 @@ const ManageProducts = () => {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewProduct({ ...newProduct, image: reader.result });
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleEdit = (index) => {
     setNewProduct(products[index]);
     setEditing(true);
@@ -65,11 +76,9 @@ const ManageProducts = () => {
           onChange={handleInputChange}
         />
         <Input
-          type="text"
+          type="file"
           name="image"
-          placeholder="Image URL"
-          value={newProduct.image}
-          onChange={handleInputChange}
+          onChange={handleImageChange}
         />
         <Button onClick={handleAddProduct}>{editing ? 'Save' : 'Add Product'}</Button>
       </Form>
