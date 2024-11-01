@@ -31,7 +31,7 @@ const Home = () => {
   // Logout function
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:8080/api/logout', {}, { withCredentials: true });
+      await axios.post('http://localhost:8080/api/logout');
       navigate('/signup'); // Redirect to signup page after logout
     } catch (error) {
       console.error('Error logging out:', error);

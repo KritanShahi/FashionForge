@@ -7,10 +7,10 @@ import Dashboard from './component/Dashboard'; // Import Dashboard component
 import CustomerManagement from './component/CustomerManagement';
 import OrderManagement from './component/OrderManagement';
 import ProductManagement from './component/ProductManagement'
-import ProductDetail from './user/ProductDetail';
 import Cart from './component/Cart';
 import { useSelector } from "react-redux";
 import MessageDashboard from './component/MessageDashboard';
+import ProductDetail  from './user/ProductDetail'
 
 
 export default function App(){
@@ -22,11 +22,11 @@ return(
 <Routes>
 
 
-<Route path='/signup' element={<Signup></Signup>}></Route>
+<Route path='/signup'  element={user ? <Navigate to="/" /> : <Signup/> }></Route>
 <Route path='/login'  element={user ? <Navigate to="/" /> : <Login /> }></Route>
 <Route path='/' element={<Home></Home>}></Route>
 <Route path="/cart" element={<Cart/>}></Route>
-
+<Route path="/product/:id" element={<ProductDetail />} />
  {/* Nest the routes under AdminDashboard */}
  <Route path="/admin" element={<AdminDashboard />}>
           <Route index element={<Dashboard />} /> {/* Default dashboard route */}
