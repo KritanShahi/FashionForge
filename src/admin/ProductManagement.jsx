@@ -66,10 +66,6 @@ const ManageProducts = () => {
     }
   };
 
-<<<<<<< HEAD:src/component/ProductManagement.jsx
-=======
-  /*
->>>>>>> origin/main:src/admin/ProductManagement.jsx
   const handleEdit = (index) => {
     setNewProduct(products[index]);
     setEditing(true);
