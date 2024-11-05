@@ -164,17 +164,7 @@ const MessageDashboard = () => {
     </Container>
   );
 };
-   /*  {replyId === message._id && (
-            <ReplyBox>
-              <input
-                type="text"
-                value={reply}
-                onChange={(e) => setReply(e.target.value)}
-                placeholder="Type your reply here"
-              />
-              <ActionButton onClick={() => handleReply(message._id)}>Send Reply</ActionButton>
-            </ReplyBox>
-          )}*/
+   
 // Styled components
 const Container = styled.div`
   max-width: 600px;
