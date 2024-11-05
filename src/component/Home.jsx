@@ -4,6 +4,20 @@ import styled from 'styled-components';
 
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userRole = localStorage.getItem('userRole');
+    if (userRole === 'admin') {
+      navigate('./admin/AdminDashboard'); // Redirects admin to dashboard
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userRole');
+    navigate('/login');
+  };
   const products = [
     {
       id: 1,
