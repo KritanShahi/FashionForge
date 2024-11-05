@@ -1,108 +1,44 @@
-<<<<<<< HEAD
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './component/Login';
-import Signup from './component/Signup';
-import Home from './component/Home';
-import AdminDashboard from './component/AdminDashboard';
-import Dashboard from './component/Dashboard'; // Import Dashboard component
-import CustomerManagement from './component/CustomerManagement';
-import OrderManagement from './component/OrderManagement';
-import ProductManagement from './component/ProductManagement';
-import MessageDashboard from './component/MessageDashboard';
 
-=======
-import {BrowserRouter,Route,Routes, Navigate} from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Login from './component/Login';
 import Signup from './component/Signup';
 import Home from './user/Home';
-import AdminDashboard from './admin/AdminDashboard';
-import Dashboard from './admin/Dashboard'; // Import Dashboard component
+import AdminDashboard from './component/AdminDashboard';
+import Dashboard from './component/Dashboard';
 import CustomerManagement from './admin/CustomerManagement';
 import OrderManagement from './admin/OrderManagement';
-import ProductManagement from './admin/ProductManagement'
-import Cart from './component/Cart';
-import { useSelector } from "react-redux";
+import ProductManagement from './admin/ProductManagement';
 import MessageDashboard from './admin/MessageDashboard';
-import ProductDetail  from './user/ProductDetail'
-import EditProduct from './admin/EditProduct';
+import ProductDetail from './user/ProductDetail';
+import Cart from './component/Cart';
 
-export default function App(){
+export default function App() {
   const user = useSelector((state) => state.user.currentUser);
 
-return(
-
-<BrowserRouter>
-<Routes>
-
-
-<Route path='/signup'  element={user ? <Navigate to="/" /> : <Signup/> }></Route>
-<Route path='/login'  element={user ? <Navigate to="/" /> : <Login /> }></Route>
-<Route path='/' element={<Home></Home>}></Route>
-<Route path="/cart" element={<Cart/>}></Route>
-<Route path="/product/:id" element={<ProductDetail />} />
- {/* Nest the routes under AdminDashboard */}
- <Route path="/admin" element={<AdminDashboard /> }>
-          <Route index element={<Dashboard />} /> {/* Default dashboard route */}
-          <Route path="customer" element={<CustomerManagement />} />
-          <Route path="order" element={<OrderManagement />} />
-          <Route path="product" element={<ProductManagement />} />
-          <Route path="message" element={<MessageDashboard/>}/>
-          <Route path="edit" element={<EditProduct />} />
-        </Route>
-
-</Routes>
-</BrowserRouter>
-
-);
-
-}
-
-//{user?.isAdmin ? <AdminDashboard /> : <Navigate to="/admin" />}
-
-
-
-
-
-/*
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './component/Login';
-import Signup from './component/Signup';
-import Home from './component/Home';
-import AdminDashboard from './component/AdminDashboard';
-import Dashboard from './component/Dashboard'; // Import Dashboard component
-import CustomerManagement from './component/CustomerManagement';
-import OrderManagement from './component/OrderManagement';
-import ProductManagement from './component/ProductManagement';
-import MessageDashboard from './component/MessageDashboard';
-
->>>>>>> origin/main
-export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/home" element={<Home />} />
+        {/* Redirect to either home or admin based on role */}
+        <Route path="/" element={user ? (user.role === 'admin' ? <Navigate to="/admin" /> : <Home />) : <Navigate to="/login" />} />
 
-<<<<<<< HEAD
-        {/* Nest the routes under AdminDashboard */}
-        <Route path="/admin" element={<AdminDashboard />}>
-          <Route index element={<Dashboard />} /> {/* Default dashboard route */}
-=======
-        {/* Nest the routes under AdminDashboard *//*
-        <Route path="/admin" element={<AdminDashboard />}>
-          <Route index element={<Dashboard />} /> {/* Default dashboard route 
->>>>>>> origin/main
+        {/* Public routes */}
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/product/:id" element={<ProductDetail />} /> {/* Example product detail route */}
+
+        {/* Protected Admin Routes */}
+        <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />}>
+          <Route index element={<Dashboard />} /> {/* Default admin dashboard */}
           <Route path="customer" element={<CustomerManagement />} />
           <Route path="order" element={<OrderManagement />} />
           <Route path="product" element={<ProductManagement />} />
-          <Route path="message" element={<MessageDashboard/>}/>
+          <Route path="message" element={<MessageDashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
-<<<<<<< HEAD
 }
-=======
-}*/
->>>>>>> origin/main
+
