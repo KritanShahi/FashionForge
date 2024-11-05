@@ -9,7 +9,7 @@ import {  useNavigate } from 'react-router-dom';
 import { addProduct } from '../redux/cartRedux';
 import Navbar from '../component/Navbar';// Import Navbar component
 import { Add, Remove } from '@mui/icons-material';
-
+import CustomerReview from './CustomerReview';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -82,6 +82,28 @@ const ProductDetail = () => {
     }
   };
 
+  const handleEditComment = async (commentId, updatedText) => {
+    try {
+      const response = await axios.put(`http://localhost:8080/api/products/${id}/comments/${commentId}`, {
+        text: updatedText,
+      });
+      setComments((prevComments) => prevComments.map(comment => 
+        comment.id === commentId ? response.data : comment
+      ));
+    } catch (error) {
+      console.error('Error editing comment:', error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/products/${id}/comments/${commentId}`);
+      setComments((prevComments) => prevComments.filter(comment => comment.id !== commentId));
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
+  
   const handleAddToCart = () => {
     dispatch(addProduct({ ...product, quantity: parseInt(quantity) }));
     alert("Product added to cart");
@@ -128,31 +150,23 @@ const ProductDetail = () => {
             <AddToCartButton onClick={handleAddToCart}>Add to Cart</AddToCartButton>
             <BuyNowButton>Buy Now</BuyNowButton>
           </ButtonGroup>
+         
+          </Details>
+          </Content>
 
-          <CommentsSection>
-            <h3>Customer Reviews</h3>
-            {comments.map((comment) => (
-              <Comment key={comment.id}>
-                <CommentUser>{comment.user}</CommentUser>
-                <CommentText>{comment.text}</CommentText>
-              </Comment>
-            ))}
-
-            <AddComment>
-              <input
-                type="text"
-                placeholder="Add a comment..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-              />
-              <CommentButton onClick={handleAddComment}>Submit</CommentButton>
-            </AddComment>
-          </CommentsSection>
-        </Details>
-      </Content>
+          <CustomerReview 
+            comments={comments} 
+            newComment={newComment} 
+            setNewComment={setNewComment} 
+            handleAddComment={handleAddComment} 
+            handleEditComment={handleEditComment} // New prop for handling edits
+            handleDeleteComment={handleDeleteComment} 
+          />
+    
     </Container>
   );
 };
+
 
 // Styled Components
 const Container = styled.div`
@@ -164,6 +178,7 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   padding: 20px;
+    align-items: flex-start; 
 `;
 
 const Image = styled.img`
@@ -176,6 +191,7 @@ const Image = styled.img`
 const Details = styled.div`
   margin-left: 20px;
   flex: 1;
+    max-width: 600px;
 `;
 
 const ProductName = styled.h1`
@@ -321,3 +337,25 @@ const CommentButton = styled.button`
 
 export default ProductDetail;
 
+
+/*   <CustomerReview comments={comments} onAddComment={handleAddComment} />*/
+
+  /*    <CommentsSection>
+            <h3>Customer Reviews</h3>
+            {comments.map((comment) => (
+              <Comment key={comment.id}>
+                <CommentUser>{comment.user}</CommentUser>
+                <CommentText>{comment.text}</CommentText>
+              </Comment>
+            ))}
+
+            <AddComment>
+              <input
+                type="text"
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+              <CommentButton onClick={handleAddComment}>Submit</CommentButton>
+            </AddComment>
+          </CommentsSection>*/
