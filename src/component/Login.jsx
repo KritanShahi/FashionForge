@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/apiCalls";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { useEffect } from 'react';
 
 const Container=styled.div`
 width:100vw;
@@ -65,8 +65,19 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const { isFetching, error } = useSelector((state) => state.user);
-  //const navigate = useNavigate(); 
+  const { isFetching, error,currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate(); 
+
+
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.isAdmin) {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    }
+  }, [currentUser, navigate]);
 
   const handleClick = (e) => {
     try{
