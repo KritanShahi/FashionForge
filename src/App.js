@@ -30,7 +30,7 @@ export default function App() {
         <Route path="/product/:id" element={<ProductDetail />} /> {/* Example product detail route */}
 
         {/* Protected Admin Routes */}
-        <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />}>
+        <Route path="/admin" element={<AdminDashboard /> }>
           <Route index element={<Dashboard />} /> {/* Default admin dashboard */}
           <Route path="customer" element={<CustomerManagement />} />
           <Route path="order" element={<OrderManagement />} />

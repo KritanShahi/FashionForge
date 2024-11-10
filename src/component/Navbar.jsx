@@ -8,9 +8,10 @@ import ShoppingCartOutlined from '@mui/icons-material/ShoppingCartOutlined';
 const Navbar = ({ searchTerm, setSearchTerm, handleLogout, quantity }) => {
   return (
     <Container>
-      <Logo>Fashion Forge</Logo>
+      <Logo to="/">Fashion Forge</Logo>
+      
       <SearchBar>
-        <input
+        <SearchInput
           type="text"
           placeholder="Search for products..."
           value={searchTerm}
@@ -18,69 +19,97 @@ const Navbar = ({ searchTerm, setSearchTerm, handleLogout, quantity }) => {
         />
         <SearchButton>Search</SearchButton>
       </SearchBar>
-      <Link to="/cart">
-        <MenuItem>
-          <Badge badgeContent={quantity} color="secondary">
-            <ShoppingCartOutlined />
-          </Badge>
-        </MenuItem>
-      </Link>
-      <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+      
+      <Menu>
+        <Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <MenuItem>
+            <Badge badgeContent={quantity} color="secondary">
+              <ShoppingCartOutlined />
+            </Badge>
+          </MenuItem>
+        </Link>
+        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+      </Menu>
     </Container>
   );
 };
 
 export default Navbar;
 
-
+// Styled Components
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
-  background-color: #f8f8f8;
+  padding: 15px 30px;
+  background-color: #333;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 `;
 
-const Logo = styled.h1`
+const Logo = styled(Link)`
   font-size: 24px;
-  color: #333;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  &:hover {
+    color: #ccc;
+  }
 `;
 
 const SearchBar = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
-  
-  input {
-    padding: 5px 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+  gap: 8px;
+  background-color: #f8f8f8;
+  padding: 5px 10px;
+  border-radius: 4px;
+`;
+
+const SearchInput = styled.input`
+  padding: 8px;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  width: 200px;
 `;
 
 const SearchButton = styled.button`
-  padding: 5px 10px;
+  padding: 8px 12px;
   font-size: 16px;
   cursor: pointer;
   background-color: #333;
   color: #fff;
   border: none;
   border-radius: 4px;
+  &:hover {
+    background-color: #555;
+  }
+`;
+
+const Menu = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
 `;
 
 const MenuItem = styled.div`
-  position: relative;
   cursor: pointer;
-  margin-right: 20px;
+  display: flex;
+  align-items: center;
 `;
 
 const LogoutButton = styled.button`
-  padding: 5px 10px;
+  padding: 8px 12px;
   font-size: 16px;
   cursor: pointer;
-  background-color: #333;
+  background-color: #ff4d4d;
   color: #fff;
   border: none;
   border-radius: 4px;
+  &:hover {
+    background-color: #ff1a1a;
+  }
 `;

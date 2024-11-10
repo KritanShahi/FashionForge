@@ -27,7 +27,6 @@ const Home = () => {
 
     fetchProducts();
   }, []);
-
   // Logout function
   const handleLogout = async () => {
     try {
