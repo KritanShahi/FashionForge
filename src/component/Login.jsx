@@ -7,11 +7,12 @@ import { login } from '../redux/apiCalls';
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #556;
+  background-color: #f0f0f0; // Match background color
   display: flex;
   align-items: center;
   justify-content: center;
 `;
+
 
 const Wrapper = styled.div`
   padding: 20px;
