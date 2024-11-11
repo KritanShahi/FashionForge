@@ -13,6 +13,7 @@ import ProductManagement from './admin/ProductManagement';
 import MessageDashboard from './admin/MessageDashboard';
 import ProductDetail from './user/ProductDetail';
 import Cart from './component/Cart';
+import EditProduct from './admin/EditProduct'
 
 export default function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="order" element={<OrderManagement />} />
           <Route path="product" element={<ProductManagement />} />
           <Route path="message" element={<MessageDashboard />} />
+          <Route path="edit" element={<EditProduct/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
