@@ -32,11 +32,14 @@ const ProductDetail = () => {
         setRating(response.data.rating);
         setRatingCount(response.data.ratingCount);
         setComments(response.data.comments);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching product:', error);
       }
     };
     fetchProduct();
+    
+ 
   }, [id]);
 
  /* const handleLogout = async () => {
@@ -81,28 +84,38 @@ const ProductDetail = () => {
       }
     }
   };
+  
 
   const handleEditComment = async (commentId, updatedText) => {
     try {
       const response = await axios.put(`http://localhost:8080/api/products/${id}/comments/${commentId}`, {
-        text: updatedText,
+        text: updatedText, // Send the updated text
       });
-      setComments((prevComments) => prevComments.map(comment => 
-        comment.id === commentId ? response.data : comment
-      ));
+  
+      // Update the comments state after successful edit
+      setComments((prevComments) => 
+        prevComments.map(comment => 
+          comment._id === commentId ? { ...comment, text: updatedText } : comment // Update only the edited comment
+        )
+      );
     } catch (error) {
       console.error('Error editing comment:', error);
     }
   };
+  
+  
 
   const handleDeleteComment = async (commentId) => {
     try {
       await axios.delete(`http://localhost:8080/api/products/${id}/comments/${commentId}`);
-      setComments((prevComments) => prevComments.filter(comment => comment.id !== commentId));
+      const response = await axios.get(`http://localhost:8080/api/products/${id}`);
+      setComments(response.data.comments);  // Re-fetch the updated comments
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
   };
+  
+  
   
   const handleAddToCart = () => {
     dispatch(addProduct({ ...product, quantity: parseInt(quantity) }));
@@ -337,25 +350,3 @@ const CommentButton = styled.button`
 
 export default ProductDetail;
 
-
-/*   <CustomerReview comments={comments} onAddComment={handleAddComment} />*/
-
-  /*    <CommentsSection>
-            <h3>Customer Reviews</h3>
-            {comments.map((comment) => (
-              <Comment key={comment.id}>
-                <CommentUser>{comment.user}</CommentUser>
-                <CommentText>{comment.text}</CommentText>
-              </Comment>
-            ))}
-
-            <AddComment>
-              <input
-                type="text"
-                placeholder="Add a comment..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-              />
-              <CommentButton onClick={handleAddComment}>Submit</CommentButton>
-            </AddComment>
-          </CommentsSection>*/
