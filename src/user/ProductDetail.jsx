@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import styled from 'styled-components';
+import styled, { createGlobalStyle }  from 'styled-components';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useDispatch ,useSelector} from 'react-redux';
 import {  useNavigate } from 'react-router-dom';
@@ -10,6 +10,18 @@ import { addProduct } from '../redux/cartRedux';
 import Navbar from '../component/Navbar';// Import Navbar component
 import { Add, Remove } from '@mui/icons-material';
 import CustomerReview from './CustomerReview';
+
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body, html, #root {
+    height: 100%;
+  }
+`;
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -133,10 +145,14 @@ const ProductDetail = () => {
   if (!product) return <div>Loading...</div>;
 
   return (
+<>
+    <GlobalStyle />
     <Container>
+
       <Navbar  
   handleLogout={handleLogout}
   quantity={quantitys} /> {/* Navbar Component */}
+     <CenteredContainer>
       <Content>
         <Image src={product.image} alt={product.name} />
         <Details>
@@ -166,7 +182,7 @@ const ProductDetail = () => {
          
           </Details>
           </Content>
-
+</CenteredContainer>
           <CustomerReview 
             comments={comments} 
             newComment={newComment} 
@@ -177,6 +193,7 @@ const ProductDetail = () => {
           />
     
     </Container>
+    </>
   );
 };
 
@@ -186,6 +203,12 @@ const Container = styled.div`
   padding-top: 0px; /* Adjusted padding for fixed Navbar */
   max-width: 1200px;
   margin: 0 auto;
+`;
+
+const CenteredContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `;
 
 const Content = styled.div`

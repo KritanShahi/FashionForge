@@ -1,11 +1,22 @@
 // CartPage.js
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch  } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { incrementQuantity, decrementQuantity } from '../redux/cartRedux';
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
+
+  const dispatch = useDispatch();
+
+  const handleIncrement = (productId) => {
+    dispatch(incrementQuantity(productId));
+  };
+
+  const handleDecrement = (productId) => {
+    dispatch(decrementQuantity(productId));
+  };
 
   return (
     <Container>
@@ -18,14 +29,21 @@ const Cart = () => {
                 <Image src={product.image} alt={product.name} />
                 <Details>
                   <ProductName>{product.title}</ProductName>
-                  <ProductPrice>${product.price}</ProductPrice>
-                  <Quantity>Quantity: {product.quantity}</Quantity>
+                  <UnitPrice>Unit Price: ${product.price.toFixed(2)}</UnitPrice>
+                  <Subtotal>
+                    Subtotal: ${(product.price * product.quantity).toFixed(2)}
+                  </Subtotal>
+                  <QuantityContainer>
+                    <QuantityButton onClick={() => handleDecrement(product._id)}>-</QuantityButton>
+                    <Quantity>{product.quantity}</Quantity>
+                    <QuantityButton onClick={() => handleIncrement(product._id)}>+</QuantityButton>
+                  </QuantityContainer>
                 </Details>
               </CartItem>
             ))}
           </CartItems>
           <Summary>
-            <SummaryText>Total: ${cart.total}</SummaryText>
+            <SummaryText>Total: ${cart.total.toFixed(2)}</SummaryText>
             <CheckoutButton>Proceed to Checkout</CheckoutButton>
           </Summary>
         </>
@@ -76,6 +94,33 @@ const ProductName = styled.h2`
   font-size: 18px;
 `;
 
+const UnitPrice = styled.p`
+  font-size: 14px;
+  color: #999;
+`;
+
+const Subtotal = styled.p`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const QuantityContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const QuantityButton = styled.button`
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  &:hover {
+    background-color: #555;
+  }
+`;
 const ProductPrice = styled.p`
   font-size: 16px;
 `;
