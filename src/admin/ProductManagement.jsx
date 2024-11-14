@@ -1,24 +1,51 @@
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react'; 
 import styled from 'styled-components';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const ManageProducts = () => {
-  const [products, setProducts] = useState([
-    { id: 1, name: 'Product 1', description: 'Description 1', price: '$99', image: 'https://via.placeholder.com/150' },
-    { id: 2, name: 'Product 2', description: 'Description 2', price: '$199', image: 'https://via.placeholder.com/150' },
-  ]);
+  const navigate = useNavigate(); // Initialize useNavigate
+  const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({ name: '', description: '', price: '', image: '' });
   const [editing, setEditing] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  
+  // Fetch products from the backend on component mount
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/products')
+      .then(response => {
+        setProducts(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
+      });
+  }, []);
 
   const handleAddProduct = () => {
     if (editing) {
-      const updatedProducts = [...products];
-      updatedProducts[editingIndex] = newProduct;
-      setProducts(updatedProducts);
-      setEditing(false);
-      setEditingIndex(null);
+      // Update product on the backend
+      const updatedProduct = { ...newProduct, id: products[editingIndex]._id };
+      axios.put(`http://localhost:8080/api/products/${updatedProduct.id}`, updatedProduct)
+        .then(response => {
+          const updatedProducts = [...products];
+          updatedProducts[editingIndex] = response.data;
+          setProducts(updatedProducts);
+          setEditing(false);
+          setEditingIndex(null);
+        })
+        .catch(error => {
+          console.error('Error updating product:', error);
+        });
     } else {
-      setProducts([...products, { ...newProduct, id: Date.now() }]);
+      // Add new product to the backend
+      axios.post('http://localhost:8080/api/products', newProduct)
+        .then(response => {
+          setProducts([...products, response.data]);
+        })
+        .catch(error => {
+          console.error('Error adding product:', error);
+        });
     }
     setNewProduct({ name: '', description: '', price: '', image: '' });
   };
@@ -39,15 +66,33 @@ const ManageProducts = () => {
     }
   };
 
+  /*
   const handleEdit = (index) => {
     setNewProduct(products[index]);
     setEditing(true);
     setEditingIndex(index);
+  };*/
+  const handleEdit = (index) => {
+    const productToEdit = products[index];
+    navigate('/admin/edit', { state: { productId: productToEdit._id } }); // Navigate to EditProduct with productId
   };
+  
 
   const handleDelete = (index) => {
-    const updatedProducts = products.filter((_, i) => i !== index);
-    setProducts(updatedProducts);
+    const productId = products[index]._id;
+    axios.delete(`http://localhost:8080/api/products/${productId}`)
+      .then(() => {
+        const updatedProducts = products.filter((_, i) => i !== index);
+        setProducts(updatedProducts);
+      })
+      .catch(error => {
+        console.error('Error deleting product:', error);
+      });
+  };
+
+  // Function to select a product and navigate to the MessageDashboard
+  const handleSelectProduct = (productId) => {
+    navigate('/admin/message', { state: { productId } }); // Navigate to MessageDashboard with productId
   };
 
   return (
@@ -90,11 +135,12 @@ const ManageProducts = () => {
             <th>Description</th>
             <th>Price</th>
             <th>Action</th>
+            <th>Comments</th> {/* Add a column for comments */}
           </tr>
         </thead>
         <tbody>
           {products.map((product, index) => (
-            <tr key={product.id}>
+            <tr key={product._id}>
               <td><img src={product.image} alt={product.name} width="50" /></td>
               <td>{product.name}</td>
               <td>{product.description}</td>
@@ -103,6 +149,10 @@ const ManageProducts = () => {
                 <ActionButton onClick={() => handleEdit(index)}>Edit</ActionButton>
                 <ActionButton onClick={() => handleDelete(index)}>Delete</ActionButton>
               </td>
+              <td>
+                {/* Add a button to open the MessageDashboard */}
+                <ActionButton onClick={() => handleSelectProduct(product._id)}>View Comments</ActionButton>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -110,6 +160,10 @@ const ManageProducts = () => {
     </Container>
   );
 };
+
+
+
+// Styled-components for styling
 
 const Container = styled.div`
   padding: 20px;
@@ -164,4 +218,6 @@ const ActionButton = styled.button`
   }
 `;
 
+
 export default ManageProducts;
+

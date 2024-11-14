@@ -1,3 +1,4 @@
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
@@ -16,6 +17,7 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.currentUser = action.payload;
       console.log("Login success:", action.payload); 
+      console.log("Updated currentUser:", state.currentUser); 
     },
     loginFailure: (state) => {
       state.isFetching = false;

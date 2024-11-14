@@ -1,12 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Badge from '@mui/material/Badge';
 import  { Search,ShoppingCartOutlined} from "@mui/icons-material"
 import { useSelector } from "react-redux";
 import Navbar from '../component/Navbar';
+import Rating from '@mui/material/Rating'; 
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -31,7 +31,7 @@ const Home = () => {
   // Logout function
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:8080/api/logout', {}, { withCredentials: true });
+      await axios.post('http://localhost:8080/api/logout');
       navigate('/signup'); // Redirect to signup page after logout
     } catch (error) {
       console.error('Error logging out:', error);
@@ -43,7 +43,8 @@ const Home = () => {
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  return (
+  return (<>
+  
     <Container>
 
 <Navbar
@@ -64,22 +65,38 @@ const Home = () => {
                 <ProductName>{product.name}</ProductName>
                 <ProductDescription>{product.description}</ProductDescription>
                 <ProductPrice>{product.price}</ProductPrice>
-                <BuyButton>Add to Cart</BuyButton>
+                <StyledRating
+                    name="product-rating"
+                    value={product.rating || 4} // Set a default rating if not provided
+                    precision={0.5}
+                    readOnly
+                  />
               </ProductInfo>
             </ProductCard>
           </Link>
         ))}
       </ProductGrid>
     </Container>
+    </>
   );
 };
 
 
 
+// Global and Styled Components
+/*
+const GlobalStyle = createGlobalStyle`
+  body, html, #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+`;*/
 
-
-
-
+const StyledRating = styled(Rating)`
+  margin-top: 10px;
+`;
 
 const Container = styled.div`
   max-width: 1200px;

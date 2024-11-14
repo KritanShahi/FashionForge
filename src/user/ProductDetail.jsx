@@ -2,14 +2,26 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import styled from 'styled-components';
+import styled, { createGlobalStyle }  from 'styled-components';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useDispatch ,useSelector} from 'react-redux';
 import {  useNavigate } from 'react-router-dom';
 import { addProduct } from '../redux/cartRedux';
 import Navbar from '../component/Navbar';// Import Navbar component
 import { Add, Remove } from '@mui/icons-material';
+import CustomerReview from './CustomerReview';
 
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body, html, #root {
+    height: 100%;
+  }
+`;
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -32,11 +44,14 @@ const ProductDetail = () => {
         setRating(response.data.rating);
         setRatingCount(response.data.ratingCount);
         setComments(response.data.comments);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching product:', error);
       }
     };
     fetchProduct();
+    
+ 
   }, [id]);
 
  /* const handleLogout = async () => {
@@ -81,7 +96,39 @@ const ProductDetail = () => {
       }
     }
   };
+  
 
+  const handleEditComment = async (commentId, updatedText) => {
+    try {
+      const response = await axios.put(`http://localhost:8080/api/products/${id}/comments/${commentId}`, {
+        text: updatedText, // Send the updated text
+      });
+  
+      // Update the comments state after successful edit
+      setComments((prevComments) => 
+        prevComments.map(comment => 
+          comment._id === commentId ? { ...comment, text: updatedText } : comment // Update only the edited comment
+        )
+      );
+    } catch (error) {
+      console.error('Error editing comment:', error);
+    }
+  };
+  
+  
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/products/${id}/comments/${commentId}`);
+      const response = await axios.get(`http://localhost:8080/api/products/${id}`);
+      setComments(response.data.comments);  // Re-fetch the updated comments
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
+  
+  
+  
   const handleAddToCart = () => {
     dispatch(addProduct({ ...product, quantity: parseInt(quantity) }));
     alert("Product added to cart");
@@ -98,10 +145,14 @@ const ProductDetail = () => {
   if (!product) return <div>Loading...</div>;
 
   return (
+<>
+    <GlobalStyle />
     <Container>
+
       <Navbar  
   handleLogout={handleLogout}
   quantity={quantitys} /> {/* Navbar Component */}
+     <CenteredContainer>
       <Content>
         <Image src={product.image} alt={product.name} />
         <Details>
@@ -128,31 +179,24 @@ const ProductDetail = () => {
             <AddToCartButton onClick={handleAddToCart}>Add to Cart</AddToCartButton>
             <BuyNowButton>Buy Now</BuyNowButton>
           </ButtonGroup>
-
-          <CommentsSection>
-            <h3>Customer Reviews</h3>
-            {comments.map((comment) => (
-              <Comment key={comment.id}>
-                <CommentUser>{comment.user}</CommentUser>
-                <CommentText>{comment.text}</CommentText>
-              </Comment>
-            ))}
-
-            <AddComment>
-              <input
-                type="text"
-                placeholder="Add a comment..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-              />
-              <CommentButton onClick={handleAddComment}>Submit</CommentButton>
-            </AddComment>
-          </CommentsSection>
-        </Details>
-      </Content>
+         
+          </Details>
+          </Content>
+</CenteredContainer>
+          <CustomerReview 
+            comments={comments} 
+            newComment={newComment} 
+            setNewComment={setNewComment} 
+            handleAddComment={handleAddComment} 
+            handleEditComment={handleEditComment} // New prop for handling edits
+            handleDeleteComment={handleDeleteComment} 
+          />
+    
     </Container>
+    </>
   );
 };
+
 
 // Styled Components
 const Container = styled.div`
@@ -161,9 +205,16 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
+const CenteredContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
 const Content = styled.div`
   display: flex;
   padding: 20px;
+    align-items: flex-start; 
 `;
 
 const Image = styled.img`
@@ -176,6 +227,7 @@ const Image = styled.img`
 const Details = styled.div`
   margin-left: 20px;
   flex: 1;
+    max-width: 600px;
 `;
 
 const ProductName = styled.h1`
