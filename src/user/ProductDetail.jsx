@@ -60,6 +60,7 @@ const ProductDetail = () => {
     try {
       await axios.post(`http://localhost:8080/api/products/${id}/love`);
       // setRating((prevRating * ratingCount + 1) / (ratingCount + 1));
+      setRating((prevRating) => ((prevRating * ratingCount + 1) / (ratingCount + 1)));
       setRatingCount((prevCount) => prevCount + 1);
     } catch (error) {
       console.error('Error updating love count:', error);
