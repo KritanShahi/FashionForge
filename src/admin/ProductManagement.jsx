@@ -66,12 +66,11 @@ const ManageProducts = () => {
     }
   };
 
-  /*
-  const handleEdit = (index) => {
-    setNewProduct(products[index]);
-    setEditing(true);
-    setEditingIndex(index);
-  };*/
+  // const handleEdit = (index) => {
+  //   setNewProduct(products[index]);
+  //   setEditing(true);
+  //   setEditingIndex(index);
+  // };
   const handleEdit = (index) => {
     const productToEdit = products[index];
     navigate('/admin/edit', { state: { productId: productToEdit._id } }); // Navigate to EditProduct with productId
