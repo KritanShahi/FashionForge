@@ -24,7 +24,10 @@ const AdminDashboard = () => (
       </Routes>
     </Content>
   </DashboardWrapper>
-);*/
+);
+   <SidebarItem onClick={() => navigate('/admin/customer')}>Customer Management</SidebarItem>
+          <SidebarItem onClick={() => navigate('/admin/order')}>Order Management</SidebarItem>
+*/
 
 
 const AdminDashboard = () => {
@@ -35,11 +38,10 @@ const AdminDashboard = () => {
       <Sidebar>
         <SidebarMenu>
           <SidebarActiveItem onClick={() => navigate('/admin')}>Dashboard</SidebarActiveItem>
-          <SidebarItem onClick={() => navigate('/admin/order')}>Order Management</SidebarItem>
+
           <SidebarItem onClick={() => navigate('/admin/product')}>Product Management</SidebarItem>
-          <SidebarItem onClick={() => navigate('/admin/customer')}>Customer Management</SidebarItem>
-          <SidebarItem onClick={() => navigate('/admin/message')} >Messages</SidebarItem>
-          <SidebarItem onClick={() => console.log("Navigate to Share")}>Transactions</SidebarItem>
+      
+
         </SidebarMenu>
         <SidebarFooter>
 

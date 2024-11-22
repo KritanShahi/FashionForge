@@ -1,14 +1,3 @@
-/*import React from 'react'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom';
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/apiCalls";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useEffect } from 'react';
-
-*/
 
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +10,7 @@ import { Link } from 'react-router-dom';
 const Container=styled.div`
 width:100vw;
 height:100vh;
-background-color:#556;
+background-color:#f0f0f0;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -70,8 +59,6 @@ cursor:pointer`;*/
 const Error = styled.span`
   color: red;
 `;
-
-
 
 
 
