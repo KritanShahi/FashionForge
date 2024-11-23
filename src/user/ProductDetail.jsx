@@ -132,7 +132,7 @@ const ProductDetail = () => {
             <Details>
               <ProductName>{product.name}</ProductName>
               <ProductDescription>{product.description}</ProductDescription>
-              <ProductPrice>${product.price}</ProductPrice>
+              <ProductPrice>Rs {product.price}</ProductPrice>
 
               <Rating>
                 <span>Rating: {rating.toFixed(1)} ({ratingCount} votes)</span>
