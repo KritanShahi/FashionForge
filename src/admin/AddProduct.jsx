@@ -15,17 +15,35 @@ const AddProduct = () => {
     const { name, value } = e.target;
     setNewProduct({ ...newProduct, [name]: value });
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNewProduct({ ...newProduct, image: reader.result });
-    };
     if (file) {
+      // Validate file type
+      const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!validImageTypes.includes(file.type)) {
+        alert("Please upload a valid image file (JPEG, PNG, or GIF).");
+        return;
+      }
+  
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewProduct({ ...newProduct, image: reader.result });
+      };
       reader.readAsDataURL(file);
     }
   };
+  
+
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.onloadend = () => {
+  //     setNewProduct({ ...newProduct, image: reader.result });
+  //   };
+  //   if (file) {
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
 //   const handleSubmit = (e) => {
 //     e.preventDefault();
@@ -76,7 +94,13 @@ const handleSubmit = (e) => {
           value={newProduct.price}
           onChange={handleInputChange}
         />
-        <Input type="file" name="image" onChange={handleImageChange} />
+        {/* <Input type="file" name="image" onChange={handleImageChange} /> */}
+        <Input 
+  type="file" 
+  name="image" 
+  accept="image/*" 
+  onChange={handleImageChange} 
+/>
         <Button type="submit">Add Product</Button>
       </Form>
     </Container>
