@@ -1,12 +1,17 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { incrementQuantity, decrementQuantity } from '../redux/cartRedux';
+import axios from 'axios';
 
-const Cart = () => {
+/*const Cart = () => {
   const cart = useSelector((state) => state.cart);
+
+  const user = useSelector((state) => state.user.currentUser); // Assuming user state exists
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleIncrement = (productId) => {
     dispatch(incrementQuantity(productId));
@@ -16,15 +21,31 @@ const Cart = () => {
     dispatch(decrementQuantity(productId));
   };
 
-  // const dispatch = useDispatch();
+  const handleCheckout = async () => {
+    if (!user) {
+      alert('You need to log in to proceed to checkout.');
+      navigate('/login'); // Redirect to login if not logged in
+      return;
+    }
 
-  // const handleIncrement = (productId) => {
-  //   dispatch(incrementQuantity(productId));
-  // };
+    try {
+      const response = await axios.post('http://localhost:8080/api/orders', {
+        userId: user._id,
+        products: cart.products.map(({ _id, quantity }) => ({
+          productId: _id,
+          quantity,
+        })),
+        total: cart.total,
+      });
 
-  // const handleDecrement = (productId) => {
-  //   dispatch(decrementQuantity(productId));
-  // };
+      alert('Order placed successfully!');
+      navigate('/'); // Redirect to home or order confirmation page
+    } catch (error) {
+      console.error('Failed to place order:', error);
+      alert('Something went wrong. Please try again.');
+    }
+  };
+
 
   return (
     <Container>
@@ -52,7 +73,90 @@ const Cart = () => {
           </CartItems>
           <Summary>
             <SummaryText>Total: ${cart.total.toFixed(2)}</SummaryText>
-            <CheckoutButton>Proceed to Checkout</CheckoutButton>
+            <CheckoutButton onClick={handleCheckout}>Proceed to Checkout</CheckoutButton>
+          </Summary>
+        </>
+      ) : (
+        <EmptyCart>
+          <p>Your cart is currently empty.</p>
+          <Link to="/">Continue Shopping</Link>
+        </EmptyCart>
+      )}
+    </Container>
+  );
+};
+*/
+const Cart = () => {
+  const cartProducts = useSelector((state) => state.cart.products);
+  const cartTotal = useSelector((state) => state.cart.total);
+  const user = useSelector((state) => state.user.currentUser); // Assuming user state exists
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const cart = useSelector((state) => state.cart);
+
+  const handleIncrement = (productId) => {
+    dispatch(incrementQuantity(productId));
+  };
+
+  const handleDecrement = (productId) => {
+    dispatch(decrementQuantity(productId));
+  };
+
+  
+
+  const handleCheckout = async () => {
+    if (!user) {
+      alert('You need to log in to proceed to checkout.');
+      navigate('/login'); // Redirect to login if not logged in
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/orders', {
+        userId: user._id,
+        products: cart.products.map(({ _id, quantity }) => ({
+          productId: _id,
+          quantity,
+        })),
+        total: cart.total,
+      });
+
+      alert('Order placed successfully!');
+      navigate('/'); // Redirect to home or order confirmation page
+    } catch (error) {
+      console.error('Failed to place order:', error);
+      alert('Something went wrong. Please try again.');
+    }
+  };
+
+
+  return (
+    <Container>
+      <Title>Your Shopping Cart</Title>
+      {cartProducts.length > 0 ? (
+        <>
+          <CartItems>
+            {cartProducts.map((product) => (
+              <CartItem key={product._id}>
+                <Image src={product.image} alt={product.name} />
+                <Details>
+                  <ProductName>{product.title}</ProductName>
+                  <UnitPrice>Unit Price: ${product.price.toFixed(2)}</UnitPrice>
+                  <Subtotal>
+                    Subtotal: ${(product.price * product.quantity).toFixed(2)}
+                  </Subtotal>
+                  <QuantityContainer>
+                    <QuantityButton onClick={() => handleDecrement(product._id)}>-</QuantityButton>
+                    <Quantity>{product.quantity}</Quantity>
+                    <QuantityButton onClick={() => handleIncrement(product._id)}>+</QuantityButton>
+                  </QuantityContainer>
+                </Details>
+              </CartItem>
+            ))}
+          </CartItems>
+          <Summary>
+            <SummaryText>Total: ${cartTotal.toFixed(2)}</SummaryText>
+            <CheckoutButton onClick={handleCheckout}>Proceed to Checkout</CheckoutButton>
           </Summary>
         </>
       ) : (
@@ -66,7 +170,6 @@ const Cart = () => {
 };
 
 export default Cart;
-
 // Styles
 const Container = styled.div`
   padding: 20px;

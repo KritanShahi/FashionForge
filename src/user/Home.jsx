@@ -6,11 +6,20 @@ import { useSelector } from "react-redux";
 import Navbar from '../component/Navbar';
 import Rating from '@mui/material/Rating'; // Import Rating component
 
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/userRedux";
+=======
+
+
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const quantity = useSelector(state => state.cart.quantity);
+
+  const dispatch = useDispatch();
+
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,13 +34,12 @@ const Home = () => {
     fetchProducts();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:8080/api/logout');
-      navigate('/signup');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
+
+  const handleLogout = () => {
+   
+    dispatch(logout()); 
+    navigate('/login');// Clear user state
+
   };
 
   const filteredProducts = products.filter((product) =>

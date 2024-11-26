@@ -3,47 +3,34 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Outlet, useNavigate } from 'react-router-dom';
-/*
-const AdminDashboard = () => (
-  <DashboardWrapper>
-    <Sidebar>
-      <h2>Admin Dashboard</h2>
-      <nav>
-        <ul>
-          <li><NavLink to="/admin/products">Manage Products</NavLink></li>
-          <li><NavLink to="/admin/orders">Manage Orders</NavLink></li>
-          <li><NavLink to="/admin/customers">Manage Customers</NavLink></li>
-        </ul>
-      </nav>
-    </Sidebar>
-    <Content>
-      <Routes>
-        <Route path="/products" element={<ManageProducts />} />
-        <Route path="/orders" element={<OrderManagement />} />
-        <Route path="/customers" element={<CustomerManagement />} />
-      </Routes>
-    </Content>
-  </DashboardWrapper>
-);*/
-
+import axios from 'axios';
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/userRedux";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+   
+    dispatch(logout()); 
+    navigate('/login');// Clear user state
+  };
+
 
   return (
     <Container>
       <Sidebar>
         <SidebarMenu>
           <SidebarActiveItem onClick={() => navigate('/admin')}>Dashboard</SidebarActiveItem>
-          <SidebarItem onClick={() => navigate('/admin/order')}>Order Management</SidebarItem>
+
           <SidebarItem onClick={() => navigate('/admin/product')}>Product Management</SidebarItem>
-          <SidebarItem onClick={() => navigate('/admin/customer')}>Customer Management</SidebarItem>
-          <SidebarItem onClick={() => navigate("/admin/messsage")}>Messages</SidebarItem>
-          <SidebarItem onClick={() => console.log("Navigate to Share")}>Transactions</SidebarItem>
+
+          <SidebarItem onClick={() => navigate('/admin/order')}>Order Management</SidebarItem>
+
         </SidebarMenu>
         <SidebarFooter>
 
-          <SidebarItem onClick={() => console.log("Logout")}>Logout</SidebarItem>
+          <SidebarItem onClick={handleLogout}>Logout</SidebarItem>
         </SidebarFooter>
       </Sidebar>
 
