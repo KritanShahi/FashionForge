@@ -5,15 +5,20 @@ import axios from 'axios';
 import { useSelector } from "react-redux";
 import Navbar from '../component/Navbar';
 import Rating from '@mui/material/Rating'; // Import Rating component
+
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/userRedux";
+=======
+
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const quantity = useSelector(state => state.cart.quantity);
+
   const dispatch = useDispatch();
+
 
 
   useEffect(() => {
@@ -29,10 +34,12 @@ const Home = () => {
     fetchProducts();
   }, []);
 
+
   const handleLogout = () => {
    
     dispatch(logout()); 
     navigate('/login');// Clear user state
+
   };
 
   const filteredProducts = products.filter((product) =>

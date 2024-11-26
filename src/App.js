@@ -22,11 +22,13 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* Redirect to either home or admin based on role */}
+
         <Route path="/" element={<Home/>}/>
 
         {/* Public routes */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+
         <Route path="/cart" element={<Cart />} />
         <Route path="/product/:id" element={<ProductDetail />} /> {/* Example product detail route */}
 
@@ -44,4 +46,6 @@ export default function App() {
   );
 }
 
+
 /*  <Route path="/" element={user ? (user.role === 'admin' ? <Navigate to="./admin/AdminDashboard" /> : <Home />) : <Navigate to="/login" />} />*/
+

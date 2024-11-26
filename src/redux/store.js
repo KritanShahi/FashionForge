@@ -4,6 +4,7 @@
 
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./userRedux"; // Adjust import paths as needed
+
 import cartReducer from "./cartRedux";
 
 // Helper function to load state from localStorage
@@ -53,6 +54,7 @@ export default store;
 
 /*import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./userRedux"; // Adjust import paths as needed
+
 import cartReducer from "./cartRedux";
 
 const rootReducer = combineReducers({
@@ -72,5 +74,6 @@ const store = configureStore({
 
 export default store;
 */
+
 
 

@@ -8,9 +8,11 @@ import { addProduct } from '../redux/cartRedux';
 import Navbar from '../component/Navbar';
 import { Add, Remove } from '@mui/icons-material';
 import CustomerReview from './CustomerReview';
+
 import { logout } from "../redux/userRedux";
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -49,6 +51,7 @@ const ProductDetail = () => {
     };
     fetchProduct();
   }, [id]);
+
 
   const handleLogout = () => {
    
@@ -101,6 +104,7 @@ const ProductDetail = () => {
     try {
       await axios.delete(`http://localhost:8080/api/comment/${id}/comments/${commentId}`);
       setComments((prevComments) => prevComments.filter((comment) => comment._id !== commentId));
+
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -199,9 +203,11 @@ const ProductDetail = () => {
   const handleLoveClick = async () => {
     try {
       await axios.post(`http://localhost:8080/api/products/${id}/love`);
+
       const newRating = (rating * ratingCount + 1) / (ratingCount + 1); 
       setRating(newRating);
       setRatingCount(ratingCount + 1); 
+
     } catch (error) {
       console.error('Error updating love count:', error);
     }
@@ -242,7 +248,9 @@ const ProductDetail = () => {
 
   const handleEditComment = async (commentId, updatedText) => {
     try {
+
       await axios.put(`http://localhost:8080/api/comment/${id}/comments/${commentId}`, {
+
         text: updatedText,
       });
       setComments((prevComments) =>
@@ -257,7 +265,9 @@ const ProductDetail = () => {
 
   const handleDeleteComment = async (commentId) => {
     try {
+
       await axios.delete(`http://localhost:8080/api/comment/${id}/comments/${commentId}`);
+
       setComments((prevComments) => prevComments.filter((comment) => comment._id !== commentId));
     } catch (error) {
       console.error('Error deleting comment:', error);
@@ -296,7 +306,9 @@ const ProductDetail = () => {
 
               <Rating>
                 <span>Rating: {rating.toFixed(1)} ({ratingCount} votes)</span>
+
                 <Stars>{renderStars()}</Stars> {/* Dynamically render stars */}
+
                 <LoveButton onClick={handleLoveClick}>
                   <StarBorderIcon />
                 </LoveButton>
@@ -328,7 +340,9 @@ const ProductDetail = () => {
     </>
   );
 };
+
 //             <Stars>{'★'.repeat(Math.floor(rating)) + (rating % 1 ? '☆' : '')}</Stars>
+
 
 // Styled Components
 const Container = styled.div`

@@ -1,36 +1,24 @@
 import React from 'react';
-
-import styled from 'styled-components';
-
 import { Outlet, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useDispatch } from "react-redux";
-import { logout } from "../redux/userRedux";
+import styled from 'styled-components';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-   
-    dispatch(logout()); 
-    navigate('/login');// Clear user state
-  };
-
 
   return (
     <Container>
       <Sidebar>
         <SidebarMenu>
           <SidebarActiveItem onClick={() => navigate('/admin')}>Dashboard</SidebarActiveItem>
-
-          <SidebarItem onClick={() => navigate('/admin/product')}>Product Management</SidebarItem>
-
           <SidebarItem onClick={() => navigate('/admin/order')}>Order Management</SidebarItem>
-
+          <SidebarItem onClick={() => navigate('/admin/product')}>Product Management</SidebarItem>
+          <SidebarItem onClick={() => navigate('/admin/customer')}>Customer Management</SidebarItem>
+          <SidebarItem onClick={() => navigate('/admin/message')}>Messages</SidebarItem>
+          {/* <SidebarItem onClick={() => console.log("Navigate to transaction")}>Transactions</SidebarItem> */}
         </SidebarMenu>
         <SidebarFooter>
 
-          <SidebarItem onClick={handleLogout}>Logout</SidebarItem>
+          <SidebarItem onClick={() => console.log("Logout")}>Logout</SidebarItem>
         </SidebarFooter>
       </Sidebar>
 
@@ -57,17 +45,12 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-
-
-
-
-
 const Sidebar = styled.div`
   width: 250px;
   height: 100vh;
-    background-color: #f4f5fc;
-padding: 20px;
-display: flex;
+  background-color: #f4f5fc;
+  padding: 20px;
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
 `;
@@ -76,7 +59,6 @@ const SidebarMenu = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
 
 const SidebarItem = styled.div`
   padding: 10px 20px;
@@ -87,8 +69,8 @@ const SidebarItem = styled.div`
   margin-bottom: 10px;
   display: flex;
   align-items: center;
-  &:hover {
 
+  &:hover {
     background-color: #d1d9ff;
     color: #3f3d56;
   }
@@ -105,8 +87,6 @@ const SidebarFooter = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-
-
 
 const Content = styled.div`
   flex: 1;
@@ -151,11 +131,8 @@ const ProfileImage = styled.img`
 
 const MainContent = styled.div`
   flex: 1;
-
   padding: 20px;
   background-color: #f9fafc;
 `;
 
 export default AdminDashboard;
-
-
