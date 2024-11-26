@@ -63,73 +63,7 @@ const CustomerReview = ({ comments, newComment, setNewComment, handleAddComment,
 };
 
 
-/*// In CustomerReview component
-const CustomerReview = ({ comments, newComment, setNewComment, handleAddComment, handleEditComment, handleDeleteComment }) => {
-  const [editingCommentId, setEditingCommentId] = useState(null);
-  const [editingText, setEditingText] = useState('');
 
-  const startEditingComment = (comment) => {
-    setEditingCommentId(comment._id); // Use _id to identify the comment
-    setEditingText(comment.text);     // Set the current comment text in the state
-  };
-
-  const saveEditComment = () => {
-    if (editingText.trim() !== '') { // Check if the text is not empty
-      handleEditComment(editingCommentId, editingText); // Pass the comment _id and the updated text
-      setEditingCommentId(null);   // Clear the editing state
-      setEditingText('');          // Clear the input after saving
-    } else {
-      alert('Comment cannot be empty'); // Optional: alert if the comment is empty
-    }
-  };
-
-  return (
-    <CommentsSection>
-      <h3>Customer Reviews</h3>
-      {comments.map((comment) => (
-        <Comment key={comment._id}>
-          <CommentUser>{comment.user}</CommentUser>
-          {editingCommentId === comment._id ? (
-            <>
-              <input
-                type="text"
-                value={editingText}
-                onChange={(e) => setEditingText(e.target.value)} // Update the editingText state
-              />
-              <button onClick={saveEditComment}>Save</button>
-              <button onClick={() => setEditingCommentId(null)}>Cancel</button>
-            </>
-          ) : (
-            <>
-              <CommentText>{comment.text}</CommentText>
-              <EditButton onClick={() => startEditingComment(comment)}>Edit</EditButton>
-              <DeleteButton onClick={() => handleDeleteComment(comment._id)}>Delete</DeleteButton>
-            </>
-          )}
-          {/* Render Admin replies here 
-          {comment.replies && comment.replies.map((reply) => (
-            <Reply key={reply.id}>
-              <AdminUser>{reply.adminUser}</AdminUser>
-              <ReplyText>{reply.text}</ReplyText>
-            </Reply>
-          ))}
-        </Comment>
-      ))}
-      <AddComment>
-        <input
-          type="text"
-          placeholder="Add a comment..."
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        />
-        <CommentButton onClick={handleAddComment}>Submit</CommentButton>
-      </AddComment>
-    </CommentsSection>
-  );
-};*/
-
-  
-  // Styled Components for the CustomerReview component
   const CommentsSection = styled.div`
     margin-top: 30px;
   `;
