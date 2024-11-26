@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import Login from './component/Login';
 import Signup from './component/Signup';
 import Home from './user/Home';
-import AdminDashboard from './component/AdminDashboard';
-import Dashboard from './component/Dashboard';
+import AdminDashboard from './admin/AdminDashboard';
+import Dashboard from './admin/Dashboard';
 import CustomerManagement from './admin/CustomerManagement';
 import OrderManagement from './admin/OrderManagement';
 import ProductManagement from './admin/ProductManagement';
@@ -22,11 +22,13 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* Redirect to either home or admin based on role */}
-        <Route path="/" element={user ? (user.role === 'admin' ? <Navigate to="./admin/AdminDashboard" /> : <Home />) : <Navigate to="/login" />} />
+
+        <Route path="/" element={<Home/>}/>
 
         {/* Public routes */}
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
+        <Route path="/login" element={<Login />} />
+
         <Route path="/cart" element={<Cart />} />
         <Route path="/product/:id" element={<ProductDetail />} /> {/* Example product detail route */}
 
@@ -43,4 +45,7 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+
+/*  <Route path="/" element={user ? (user.role === 'admin' ? <Navigate to="./admin/AdminDashboard" /> : <Home />) : <Navigate to="/login" />} />*/
 
