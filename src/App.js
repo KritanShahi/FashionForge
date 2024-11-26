@@ -14,6 +14,9 @@ import ProductDetail from './user/ProductDetail';
 import Cart from './component/Cart';
 import EditProduct from './admin/EditProduct';
 import AddProduct from './admin/AddProduct';
+import ForgetPassword from './component/ForgetPassword';
+import BuyNow from './component/BuyNow';
+import Sidebar from './component/Sidebar';
 
 export default function App() {
   const { currentUser, isFetching } = useSelector((state) => state.user);
@@ -45,6 +48,9 @@ export default function App() {
         />
         <Route path="/" element={currentUser ? <Home /> : <Navigate to="/login" />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/sidebar" element={<Sidebar />} />
+        <Route path="/forget" element={<ForgetPassword />} />
+        <Route path="/buy" element={<BuyNow />} />
         <Route path="/product/:id" element={<ProductDetail />} />
 
         {/* Admin Routes */}

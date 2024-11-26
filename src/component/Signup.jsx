@@ -11,14 +11,15 @@ const SignupContainer = styled.div`
   justify-content: center;
   height: 100vh;
   background-color: #f0f0f0;
+  width:100vw;
 `;
 
 const Form = styled.form`
   background: white;
-  padding: 2rem;
+  padding: 5rem;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  width: 360px;
 `;
 
 const Input = styled.input`
@@ -44,7 +45,7 @@ const Button = styled.button`
 `;
 
 const Select = styled.select`
-  width: 100%;
+  width: 26vw;
   padding: 1rem;
   margin: 0.5rem 0;
   border: 1px solid #ccc;

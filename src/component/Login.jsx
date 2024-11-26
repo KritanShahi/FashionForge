@@ -128,6 +128,7 @@ function Login() {
           {error && <Error>Invalid username or password.</Error>} {/* Display API error */}
           <Button onClick={handleClick} disabled={isFetching}>LOGIN</Button>
           <Link to='/signup'>CREATE A NEW ACCOUNT</Link>
+          <Link to='/forget'>Forget Password</Link>
         </Form>
       </Wrapper>
     </Container>

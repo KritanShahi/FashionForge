@@ -132,6 +132,8 @@ const CustomerReview = ({ comments, newComment, setNewComment, handleAddComment,
   // Styled Components for the CustomerReview component
   const CommentsSection = styled.div`
     margin-top: 30px;
+    margin-left:15px;
+    margin-right:15px;
   `;
   
   const Comment = styled.div`

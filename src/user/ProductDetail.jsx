@@ -151,7 +151,7 @@ const ProductDetail = () => {
 
               <ButtonGroup>
                 <AddToCartButton onClick={handleAddToCart}>Add to Cart</AddToCartButton>
-                <BuyNowButton>Buy Now</BuyNowButton>
+                <BuyNowButton >Buy Now</BuyNowButton>
               </ButtonGroup>
             </Details>
           </Content>
