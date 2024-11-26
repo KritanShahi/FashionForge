@@ -1,34 +1,6 @@
 import React from 'react';
-
-import styled from 'styled-components';
-
 import { Outlet, useNavigate } from 'react-router-dom';
-/*
-const AdminDashboard = () => (
-  <DashboardWrapper>
-    <Sidebar>
-      <h2>Admin Dashboard</h2>
-      <nav>
-        <ul>
-          <li><NavLink to="/admin/products">Manage Products</NavLink></li>
-          <li><NavLink to="/admin/orders">Manage Orders</NavLink></li>
-          <li><NavLink to="/admin/customers">Manage Customers</NavLink></li>
-        </ul>
-      </nav>
-    </Sidebar>
-    <Content>
-      <Routes>
-        <Route path="/products" element={<ManageProducts />} />
-        <Route path="/orders" element={<OrderManagement />} />
-        <Route path="/customers" element={<CustomerManagement />} />
-      </Routes>
-    </Content>
-  </DashboardWrapper>
-);
-   <SidebarItem onClick={() => navigate('/admin/customer')}>Customer Management</SidebarItem>
-          <SidebarItem onClick={() => navigate('/admin/order')}>Order Management</SidebarItem>
-*/
-
+import styled from 'styled-components';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -38,11 +10,11 @@ const AdminDashboard = () => {
       <Sidebar>
         <SidebarMenu>
           <SidebarActiveItem onClick={() => navigate('/admin')}>Dashboard</SidebarActiveItem>
-
+          <SidebarItem onClick={() => navigate('/admin/order')}>Order Management</SidebarItem>
           <SidebarItem onClick={() => navigate('/admin/product')}>Product Management</SidebarItem>
           <SidebarItem onClick={() => navigate('/admin/customer')}>Customer Management</SidebarItem>
-          <SidebarItem onClick={() => navigate("/admin/messsage")}>Messages</SidebarItem>
-          <SidebarItem onClick={() => console.log("Navigate to Share")}>Transactions</SidebarItem>
+          <SidebarItem onClick={() => navigate('/admin/message')}>Messages</SidebarItem>
+          {/* <SidebarItem onClick={() => console.log("Navigate to transaction")}>Transactions</SidebarItem> */}
         </SidebarMenu>
         <SidebarFooter>
 
@@ -73,17 +45,12 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-
-
-
-
-
 const Sidebar = styled.div`
   width: 250px;
   height: 100vh;
-    background-color: #f4f5fc;
-padding: 20px;
-display: flex;
+  background-color: #f4f5fc;
+  padding: 20px;
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
 `;
@@ -92,7 +59,6 @@ const SidebarMenu = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
 
 const SidebarItem = styled.div`
   padding: 10px 20px;
@@ -103,8 +69,8 @@ const SidebarItem = styled.div`
   margin-bottom: 10px;
   display: flex;
   align-items: center;
-  &:hover {
 
+  &:hover {
     background-color: #d1d9ff;
     color: #3f3d56;
   }
@@ -121,8 +87,6 @@ const SidebarFooter = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-
-
 
 const Content = styled.div`
   flex: 1;
@@ -167,11 +131,8 @@ const ProfileImage = styled.img`
 
 const MainContent = styled.div`
   flex: 1;
-
   padding: 20px;
   background-color: #f9fafc;
 `;
 
 export default AdminDashboard;
-
-
