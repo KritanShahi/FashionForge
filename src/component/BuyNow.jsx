@@ -58,7 +58,7 @@ const ErrorText = styled.p`
   margin: 0;
 `;
 
-const Signup = () => {
+const BuyNow = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -127,7 +127,7 @@ const Signup = () => {
 
   return (
     <SignupContainer>
-      <h2>Sign Up</h2>
+      <h2>Order</h2>
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
@@ -139,16 +139,7 @@ const Signup = () => {
         />
         {errors.username && <ErrorText>{errors.username}</ErrorText>}
 
-        <Select
-          name="isAdmin"
-          value={formData.isAdmin}
-          onChange={handleChange}
-        >
-          <option value="" disabled>Select user type</option>
-          <option value="true">Admin</option>
-          <option value="false">User</option>
-        </Select>
-        {errors.isAdmin && <ErrorText>{errors.isAdmin}</ErrorText>}
+    
 
         <Input
           type="email"
@@ -159,7 +150,14 @@ const Signup = () => {
           required
         />
         {errors.email && <ErrorText>{errors.email}</ErrorText>}
-
+        <Input
+          type="phone"
+          name="phone no"
+          placeholder="Phone no"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
         <Input
           type="password"
           name="password"
@@ -170,12 +168,13 @@ const Signup = () => {
         />
         {errors.password && <ErrorText>{errors.password}</ErrorText>}
 
-        <Button type="submit">Sign Up</Button>
+        <Button type="submit">Confirm</Button>
         {apiError && <ErrorText>{apiError}</ErrorText>}
-        <Link to='/login'>Already have an Account</Link>
+
       </Form>
     </SignupContainer>
   );
 };
 
-export default Signup;
+export default BuyNow;
+

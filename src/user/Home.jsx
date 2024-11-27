@@ -63,7 +63,7 @@ const Home = () => {
                 <ProductInfo>
                   <ProductName>{product.name}</ProductName>
                   <ProductDescription>{product.description}</ProductDescription>
-                  <ProductPrice>${product.price}</ProductPrice>
+                  <ProductPrice>Rs {product.price}</ProductPrice>
                   <StyledRating
                     name="product-rating"
                     value={product.rating || 4} // Set a default rating if not provided

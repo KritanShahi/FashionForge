@@ -66,6 +66,8 @@ const CustomerReview = ({ comments, newComment, setNewComment, handleAddComment,
 
   const CommentsSection = styled.div`
     margin-top: 30px;
+    margin-left:15px;
+    margin-right:15px;
   `;
   
   const Comment = styled.div`
