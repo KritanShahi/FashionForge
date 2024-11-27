@@ -1,70 +1,82 @@
-// src/Dashboard.js
-import React from 'react';
-import styled from 'styled-components';
 
-const Dashboard = () => (
-  <MainContent>
-    <h2>Dashboard</h2>
-    <CardContainer>
-      <Card>
-        <h3>Total Customer</h3>
-        <p>50,120</p>
-      </Card>
-      <Card>
-        <h3>Product</h3>
-        <p>25,120</p>
-      </Card>
-      <Card>
-        <h3>Total Product Sold</h3>
-        <p>10,320</p>
-      </Card>
-    </CardContainer>
-    <RecentActivity>
-      <h3>Recent Activity</h3>
-      <StyledTable>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Type</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Prem Shahi</td>
-            <td>premshahi@gmail.com</td>
-            <td>12345</td>
-            <td>New</td>
-            <td>Pending</td>
-          </tr>
-          <tr>
-            <td>Deepa Chand</td>
-            <td>deepachand@gmail.com</td>
-            <td>20212</td>
-            <td>Member</td>
-            <td>Shipped</td>
-          </tr>
-          <tr>
-            <td>Prakash Shahi</td>
-            <td>prakashshahi@gmail.com</td>
-            <td>213</td>
-            <td>New</td>
-            <td>Shipped</td>
-          </tr>
-          <tr>
-            <td>Manisha Chand</td>
-            <td>manishachand@gmail.com</td>
-            <td>2023</td>
-            <td>Member</td>
-            <td>Pending</td>
-          </tr>
-        </tbody>
-      </StyledTable>
-    </RecentActivity>
-  </MainContent>
-);
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import axios from 'axios';
+const Dashboard = () => {
+  const [stats, setStats] = useState({
+    totalCustomers: 0,
+    totalProducts: 0,
+    totalProductsSold: 0,
+    recentOrders: [],
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/products/dashboard-stats');
+        setStats(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch stats:', err);
+        setError('Failed to load dashboard stats.');
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading) return <MainContent>Loading...</MainContent>;
+  if (error) return <MainContent>{error}</MainContent>;
+
+  return (
+    <MainContent>
+      <h2>Dashboard</h2>
+      <CardContainer>
+        <Card>
+          <h3>Total Customers</h3>
+          <p>{stats.totalCustomers.toLocaleString()}</p>
+        </Card>
+        <Card>
+          <h3>Products</h3>
+          <p>{stats.totalProducts.toLocaleString()}</p>
+        </Card>
+        <Card>
+          <h3>Total Products Sold</h3>
+          <p>{stats.totalProductsSold.toLocaleString()}</p>
+        </Card>
+      </CardContainer>
+
+      <RecentActivity>
+        <h3>Recent Orders</h3>
+        <StyledTable>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Type</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stats.recentOrders.map((order, index) => (
+              <tr key={index}>
+                <td>{order.userDetails.name}</td>
+                <td>{order.userDetails.email}</td>
+                <td>{order.userDetails.phone}</td>
+                <td>{order.userDetails.type}</td>
+                <td>{order.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </StyledTable>
+      </RecentActivity>
+    </MainContent>
+  );
+};
 
 const MainContent = styled.div`
   flex: 1;
