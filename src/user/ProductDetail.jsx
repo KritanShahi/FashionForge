@@ -347,6 +347,10 @@ const ProductDetail = () => {
           onClose={handleCloseOrderForm}
           onSubmit={handleOrderSubmit}
           product={{ ...product, quantity: quantity }} 
+          onOrderSuccess={() => {
+            alert("Order placed successfully!");
+            navigate("/"); // Redirect to the homepage
+          }}
         />
       )}
               </ButtonGroup>

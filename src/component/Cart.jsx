@@ -94,7 +94,7 @@ const Cart = () => {
   const cartTotal = useSelector((state) => state.cart.total);
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [showCheckoutForm, setShowCheckoutForm] = useState(false); // State to toggle the BuyNow form
 
   const handleIncrement = (productId) => {
@@ -117,12 +117,18 @@ const Cart = () => {
   const totalQuantity = cartProducts.reduce((acc, product) => acc + product.quantity, 0);
 
   // Handle successful order placement and reset cart
-  const handleOrderSuccess = () => {
+  /*const handleOrderSuccess = () => {
     alert("Order placed successfully!");
     dispatch(resetCart()); // Reset cart quantities
     setShowCheckoutForm(false); // Close checkout form
-  };
+  };*/
 
+  const handleOrderSuccess = () => {
+    alert("Order placed successfully!");
+    dispatch(resetCart()); // Clear the cart
+    setShowCheckoutForm(false); // Close the checkout form
+    navigate('/'); // Redirect to the homepage
+  };
   return (
     <Container>
       {showCheckoutForm ? (
