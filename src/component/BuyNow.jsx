@@ -1,180 +1,222 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import styled from "styled-components";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
-const SignupContainer = styled.div`
+import { useNavigate } from "react-router-dom";
+
+
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #f0f0f0;
-  width:100vw;
+  align-items: center;
+  z-index: 1000;
 `;
 
-const Form = styled.form`
+const FormContainer = styled.div`
   background: white;
-  padding: 5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 360px;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+`;
+
+const Title = styled.h2`
+  margin-bottom: 20px;
+  text-align: center;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 1rem;
-  margin: 0.5rem 0;
+  padding: 10px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-size: 14px;
 `;
 
 const Button = styled.button`
   width: 100%;
-  padding: 1rem;
-  background-color: #007bff;
+  padding: 10px;
+  margin-top: 10px;
+  background: teal;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+    background: darkcyan;
   }
 `;
 
-const Select = styled.select`
-  width: 26vw;
-  padding: 1rem;
-  margin: 0.5rem 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+const CloseButton = styled(Button)`
+  background: red;
+  &:hover {s
+    background: darkred;
+  }
 `;
 
-const ErrorText = styled.p`
-  color: red;
-  font-size: 0.875rem;
-  margin: 0;
-`;
 
-const BuyNow = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    isAdmin: false, // default to 'user'
-  });
-  const [errors, setErrors] = useState({});
-  const [apiError, setApiError] = useState('');
+
+
+
+const BuyNow = ({ onClose, product }) => {
   const navigate = useNavigate();
+
+  // Fetching user and Redux cart state
+  const user = useSelector((state) => state.user.currentUser); // User data from Redux
+  const cart = useSelector((state) => state.cart); // Access cart for quantity if needed
+
+  // Setting up order details
+  const [orderDetails, setOrderDetails] = useState({
+    name: "",
+    address: "",
+    contact: "",
+    quantity: 1,
+  });
+
+  console.log(user);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'isAdmin' ? value === 'true' : value, // Convert isAdmin to boolean
-    }));
+    setOrderDetails((prev) => ({ ...prev, [name]: value }));
   };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required.';
-    } else if (formData.username.length < 3 || formData.username.length > 15) {
-      newErrors.username = 'Username must be between 3 and 15 characters.';
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email format.';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required.';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
-    }
-
-    if (formData.isAdmin === '') {
-      newErrors.isAdmin = 'Please select a user type.';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
+  /*const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
-    try {
-      const response = await axios.post('http://localhost:8080/api/signup', formData);
-      console.log('Registration successful:', response.data);
-
-      if (formData.isAdmin) {
-        navigate('/admin'); // Redirect to admin home page
-      } else {
-        navigate('/'); // Redirect to user home page
-      }
-    } catch (error) {
-      console.error('Registration error:', error.response?.data || error.message);
-      setApiError('Registration failed. Please try again.');
+  
+    if (!user) {
+      alert("You need to log in to place an order.");
+      navigate("/login");
+      return;
     }
+
+  const orderData = {
+    userId: user._id,
+    products: product._id === 'cart' 
+      ? cart.products.map((cartProduct) => ({
+          productId: cartProduct._id, // Map _id to productId
+          quantity: cartProduct.quantity, // Use the quantity from the cart
+          price: cartProduct.price, // Include price for reference
+        }))
+      : [
+          {
+            productId: product._id, // Single product scenario
+            quantity: orderDetails.quantity,
+            price: product.price,
+          },
+        ],
+    total: product._id === 'cart' ? cart.total : product.price * orderDetails.quantity,
+    shippingAddress: orderDetails.address,
+    contactNumber: orderDetails.contact,
   };
+  
+
+  try {
+    const response = await axios.post('http://localhost:8080/api/orders/buy', orderData);
+    alert('Order placed successfully!');
+    onClose();
+    navigate('/');
+  } catch (error) {
+    console.error('Failed to place order:', error.response?.data || error.message);
+    alert(error.response?.data?.error || 'Something went wrong. Please try again.');
+  }
+};*/const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!user) {
+    alert("You need to log in to place an order.");
+    navigate("/login");
+    return;
+  }
+
+  const orderData = {
+    userId: user._id,
+    products: product._id === 'cart'
+      ? cart.products.map((cartProduct) => ({
+          productId: cartProduct._id,
+          quantity: cartProduct.quantity,
+          price: cartProduct.price,
+        }))
+      : [
+          {
+            productId: product._id,
+            quantity: orderDetails.quantity,
+            price: product.price,
+          },
+        ],
+    total: product._id === 'cart' ? cart.total : product.price * orderDetails.quantity,
+    shippingAddress: orderDetails.address,
+    contactNumber: orderDetails.contact,
+    name: orderDetails.name,  // Add the 'name' field here
+  };
+
+  console.log('Sending order data:', orderData);  // Log the order data for debugging
+
+  try {
+    const response = await axios.post('http://localhost:8080/api/orders/buy', orderData);
+    alert('Order placed successfully!');
+    onClose();
+    navigate('/');
+  } catch (error) {
+    console.error('Failed to place order:', error.response?.data || error.message);
+    alert(error.response?.data?.error || 'Something went wrong. Please try again.');
+  }
+};
+
 
   return (
-    <SignupContainer>
-      <h2>Order</h2>
-      <Form onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        {errors.username && <ErrorText>{errors.username}</ErrorText>}
-
-    
-
-        <Input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        {errors.email && <ErrorText>{errors.email}</ErrorText>}
-        <Input
-          type="phone"
-          name="phone no"
-          placeholder="Phone no"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        {errors.password && <ErrorText>{errors.password}</ErrorText>}
-
-        <Button type="submit">Confirm</Button>
-        {apiError && <ErrorText>{apiError}</ErrorText>}
-
-      </Form>
-    </SignupContainer>
+    <Modal>
+      <FormContainer>
+        <Title>Buy Now</Title>
+        <form onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={orderDetails.name}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="text"
+            name="address"
+            placeholder="Delivery Address"
+            value={orderDetails.address}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="tel"
+            name="contact"
+            placeholder="Contact Number"
+            value={orderDetails.contact}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="number"
+            name="quantity"
+            placeholder="Quantity"
+            value={orderDetails.quantity}
+            onChange={handleChange}
+            min="1"
+            required
+          />
+          <Button type="submit">Place Order</Button>
+        </form>
+        <CloseButton onClick={onClose}>Cancel</CloseButton>
+      </FormContainer>
+    </Modal>
   );
 };
 
 export default BuyNow;
-

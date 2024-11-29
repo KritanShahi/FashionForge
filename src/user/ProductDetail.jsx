@@ -12,6 +12,7 @@ import CustomerReview from './CustomerReview';
 import { logout } from "../redux/userRedux";
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
+import BuyNow from '../component/BuyNow';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -184,6 +185,7 @@ const ProductDetail = () => {
   const dispatch = useDispatch();
   const cartQuantity = useSelector((state) => state.cart.quantity);
   const navigate = useNavigate();
+  const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -199,6 +201,21 @@ const ProductDetail = () => {
     };
     fetchProduct();
   }, [id]);
+
+
+
+  const handleBuyNowClick = () => {
+    setIsOrderFormOpen(true);
+  };
+
+  const handleCloseOrderForm = () => {
+    setIsOrderFormOpen(false);
+  };
+
+  const handleOrderSubmit = (orderData) => {
+    console.log("Order Submitted:", orderData);
+    // You can send the order data to your backend here.
+  };
 
   const handleLoveClick = async () => {
     try {
@@ -298,11 +315,11 @@ const ProductDetail = () => {
         <Navbar handleLogout={handleLogout} quantity={cartQuantity} />
         <CenteredContainer>
           <Content>
-            <Image src={product.image} alt={product.name} />
+            <Image src={product.image} alt={product.namse} />
             <Details>
               <ProductName>{product.name}</ProductName>
               <ProductDescription>{product.description}</ProductDescription>
-              <ProductPrice>${product.price}</ProductPrice>
+              <ProductPrice>Rs {product.price}</ProductPrice>
 
               <Rating>
                 <span>Rating: {rating.toFixed(1)} ({ratingCount} votes)</span>
@@ -323,7 +340,15 @@ const ProductDetail = () => {
 
               <ButtonGroup>
                 <AddToCartButton onClick={handleAddToCart}>Add to Cart</AddToCartButton>
-                <BuyNowButton>Buy Now</BuyNowButton>
+                <BuyNowButton onClick={handleBuyNowClick}>Buy Now</BuyNowButton>
+
+                {isOrderFormOpen && (
+        <BuyNow
+          onClose={handleCloseOrderForm}
+          onSubmit={handleOrderSubmit}
+          product={{ ...product, quantity: quantity }} 
+        />
+      )}
               </ButtonGroup>
             </Details>
           </Content>
