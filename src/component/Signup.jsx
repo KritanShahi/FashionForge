@@ -31,7 +31,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  width: 100%;
+  width: 21vw;
   padding: 1rem;
   background-color: #007bff;
   color: white;
@@ -45,7 +45,7 @@ const Button = styled.button`
 `;
 
 const Select = styled.select`
-  width: 26vw;
+  width: 20vw;
   padding: 1rem;
   margin: 0.5rem 0;
   border: 1px solid #ccc;

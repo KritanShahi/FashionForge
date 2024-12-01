@@ -11,6 +11,8 @@ const AddProduct = () => {
     image: "",
   });
 
+  const [error, setError] = useState("");
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewProduct({ ...newProduct, [name]: value });
@@ -34,24 +36,52 @@ const AddProduct = () => {
   };
   
 
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   const reader = new FileReader();
-  //   reader.onloadend = () => {
-  //     setNewProduct({ ...newProduct, image: reader.result });
-  //   };
-  //   if (file) {
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
+  const validateForm = () => {
+    if (!newProduct.name || !newProduct.description || !newProduct.price || !newProduct.image) {
+      setError("Please fill in all fields and upload an image.");
+      return false;
+    }
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     // Post the new product to the backend
-//     console.log("Product Added:", newProduct);
-//     navigate("/admin/product"); // Navigate back after adding product
-//   };
-const handleSubmit = (e) => {
+    // Validate product name to ensure it's not a number
+    if (!isNaN(newProduct.name)) {
+      setError("Product name cannot be a number.");
+      return false;
+    }
+
+    // Validate price to ensure it's a valid number
+    if (isNaN(newProduct.price) || newProduct.price <= 0) {
+      setError("Please enter a valid price.");
+      return false;
+    }
+
+    setError(""); // Clear any previous error messages
+    return true;
+  };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Validate form fields before submission
+    if (!validateForm()) {
+      return; // Stop form submission if validation fails
+    }
+
+    // Post the new product to the backend
+    axios
+      .post('http://localhost:8080/api/products', newProduct)
+      .then((response) => {
+        console.log('Product added:', response.data);
+
+        // Redirect back to ManageProducts after adding
+        navigate('/admin/product', { state: { refresh: true } });
+      })
+      .catch((error) => {
+        console.error('Error adding product:', error);
+      });
+  };
+/*
+  const handleSubmit = (e) => {
     e.preventDefault();
   
     // Post the new product to the backend
@@ -66,12 +96,15 @@ const handleSubmit = (e) => {
       .catch((error) => {
         console.error('Error adding product:', error);
       });
+  };*/
+    const handleCancel = () => {
+    navigate('/admin/product'); // Navigate back to the ManageProducts page when canceled
   };
-  
 
   return (
     <Container>
       <h2>Add New Product</h2>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
@@ -102,6 +135,7 @@ const handleSubmit = (e) => {
   onChange={handleImageChange} 
 />
         <Button type="submit">Add Product</Button>
+        <Button onClick={handleCancel}>Cancel</Button>
       </Form>
     </Container>
   );
@@ -136,4 +170,9 @@ const Button = styled.button`
   }
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+`;
 export default AddProduct;
