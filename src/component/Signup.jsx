@@ -135,7 +135,7 @@ const Signup = () => {
           placeholder="Username"
           value={formData.username}
           onChange={handleChange}
-          required
+         
         />
         {errors.username && <ErrorText>{errors.username}</ErrorText>}
 
@@ -156,7 +156,7 @@ const Signup = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
-          required
+        
         />
         {errors.email && <ErrorText>{errors.email}</ErrorText>}
 
@@ -166,7 +166,7 @@ const Signup = () => {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
-          required
+       
         />
         {errors.password && <ErrorText>{errors.password}</ErrorText>}
 

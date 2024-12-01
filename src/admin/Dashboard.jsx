@@ -17,6 +17,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/products/dashboard-stats');
+        console.log(response.data);
         setStats(response.data);
         setLoading(false);
       } catch (err) {
@@ -57,7 +58,7 @@ const Dashboard = () => {
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Type</th>
+            
               <th>Status</th>
             </tr>
           </thead>
@@ -67,8 +68,7 @@ const Dashboard = () => {
                 <td>{order.userDetails.name}</td>
                 <td>{order.userDetails.email}</td>
                 <td>{order.userDetails.phone}</td>
-                <td>{order.userDetails.type}</td>
-                <td>{order.status}</td>
+                 <td>{order.status}</td>
               </tr>
             ))}
           </tbody>

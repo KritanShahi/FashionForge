@@ -5,9 +5,9 @@ import axios from 'axios';
 import { useSelector } from "react-redux";
 import Navbar from '../component/Navbar';
 import Rating from '@mui/material/Rating'; // Import Rating component
-
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/userRedux";
+
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -54,6 +54,7 @@ const Home = () => {
           handleLogout={handleLogout}
           quantity={quantity}
         />
+      
         <PageTitle>Our Products</PageTitle>
         <ProductGrid>
           {filteredProducts.map((product) => (
