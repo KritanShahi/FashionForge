@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle,keyframes } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ProductBanner from './ProductBanner';
 import { useSelector } from "react-redux";
 import Navbar from '../component/Navbar';
 import Rating from '@mui/material/Rating'; // Import Rating component
-
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/userRedux";
+
+
+
+
+
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -16,6 +21,8 @@ const Home = () => {
   const quantity = useSelector(state => state.cart.quantity);
 
   const dispatch = useDispatch();
+
+
 
 
 
@@ -40,6 +47,9 @@ const Home = () => {
 
   };
 
+    // Extract images from products for the banner
+    const productImages = products.map((product) => product.image);
+
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -54,6 +64,13 @@ const Home = () => {
           handleLogout={handleLogout}
           quantity={quantity}
         />
+              <Banner>
+          <BannerText>
+          🚚 Free Shipping on orders above Rs 500! Limited time only. 🚚
+          </BannerText>
+        </Banner>
+               {/* Dynamic Product Banner */}
+               <ProductBanner productImages={productImages} />
         <PageTitle>Our Products</PageTitle>
         <ProductGrid>
           {filteredProducts.map((product) => (
@@ -80,6 +97,34 @@ const Home = () => {
   );
 };
 
+
+
+// Keyframes for scrolling animation
+const scroll = keyframes`
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+`;
+
+// Styled Components
+const Banner = styled.div`
+  background-color: #ffc107;
+  color: #000;
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
+`;
+
+const BannerText = styled.div`
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 1.2rem;
+  font-weight: bold;
+  animation: ${scroll} 10s linear infinite;
+`;
 // Global and Styled Components
 const GlobalStyle = createGlobalStyle`
   body, html, #root {
@@ -125,8 +170,8 @@ const ProductCard = styled.div`
 
 const ProductImage = styled.img`
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 250px;
+  object-fit: contain;
 `;
 
 const ProductInfo = styled.div`
@@ -156,4 +201,3 @@ const StyledRating = styled(Rating)`
 `;
 
 export default Home;
-

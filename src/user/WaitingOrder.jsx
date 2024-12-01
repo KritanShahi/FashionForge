@@ -223,7 +223,6 @@ const WaitingOrder = () => {
           <tbody>
             {orders.map((order) => (
               <tr key={order._id}>
-                <td>{order.userId?.name || 'N/A'}</td> {/* Display customer name */}
                 <td>
                   {order.products?.length > 0
                     ? order.products.map(product => product.productId?.name).join(', ')  // Access product name

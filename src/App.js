@@ -17,6 +17,8 @@ import EditProduct from './admin/EditProduct';
 import ForgetPassword from './component/ForgetPassword';
 import BuyNow from './component/BuyNow';
 import OrderDetails from './admin/OrderDetails';
+
+import AddProduct from './admin/AddProduct';
 import WaitingOrder from './user/WaitingOrder';
 
 export default function App() {
@@ -46,7 +48,7 @@ export default function App() {
           <Route path="product" element={<ProductManagement />} />
           <Route path="message" element={<MessageDashboard />} />
           <Route path="edit" element={<EditProduct/>}/>
-          <Route path="add" element={<EditProduct/>}/>
+          <Route path="add" element={<AddProduct/>}/>
           <Route path="order/:id" element={<OrderDetails />} />
         </Route>
       </Routes>

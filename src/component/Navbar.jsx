@@ -21,8 +21,12 @@ const Navbar = ({ searchTerm, setSearchTerm, handleLogout, quantity }) => {
         />
         <SearchButton>Search</SearchButton>
       </SearchBar>
-      
+      <Link to="/orderdetails" style={{ textDecoration: 'none', color: 'inherit' }}>
+<p>OrderDetails</p>
+</Link>
+
       <Menu>
+
         <Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>
           <MenuItem>
             <Badge badgeContent={quantity} color="secondary">
