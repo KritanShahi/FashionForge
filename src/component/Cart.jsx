@@ -1,101 +1,18 @@
-/*
-
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { incrementQuantity, decrementQuantity } from '../redux/cartRedux';
-import BuyNow from './BuyNow'; // Import BuyNow component
-
-
-const Cart = () => {
-  const cartProducts = useSelector((state) => state.cart.products);
-  const cartTotal = useSelector((state) => state.cart.total);
-  const user = useSelector((state) => state.user.currentUser);
-  const dispatch = useDispatch();
-
-  const [showCheckoutForm, setShowCheckoutForm] = useState(false); // State to toggle the BuyNow form
-
-  const handleIncrement = (productId) => {
-    dispatch(incrementQuantity(productId));
-  };
-
-  const handleDecrement = (productId) => {
-    dispatch(decrementQuantity(productId));
-  };
-
-  const handleCheckout = () => {
-    if (!user) {
-      alert('You need to log in to proceed to checkout.');
-      return;
-    }
-    setShowCheckoutForm(true); // Show the checkout form
-  };
-
-  return (
-    <Container>
-      {showCheckoutForm ? (
-        <BuyNow
-          onClose={() => setShowCheckoutForm(false)}
-          product={{
-            _id: 'cart',
-            price: cartTotal,
-          }}
-        />
-      ) : (
-        <>
-          <Title>Your Shopping Cart</Title>
-          {cartProducts.length > 0 ? (
-            <>
-              <CartItems>
-                {cartProducts.map((product) => (
-                  <CartItem key={product._id}>
-                    <Image src={product.image} alt={product.name} />
-                    <Details>
-                      <ProductName>{product.title}</ProductName>
-                      <UnitPrice>Unit Price: ${product.price.toFixed(2)}</UnitPrice>
-                      <Subtotal>
-                        Subtotal: ${(product.price * product.quantity).toFixed(2)}
-                      </Subtotal>
-                      <QuantityContainer>
-                        <QuantityButton onClick={() => handleDecrement(product._id)}>-</QuantityButton>
-                        <Quantity>{product.quantity}</Quantity>
-                        <QuantityButton onClick={() => handleIncrement(product._id)}>+</QuantityButton>
-                      </QuantityContainer>
-                    </Details>
-                  </CartItem>
-                ))}
-              </CartItems>
-              <Summary>
-                <SummaryText>Total: ${cartTotal.toFixed(2)}</SummaryText>
-                <CheckoutButton onClick={handleCheckout}>Proceed to Checkout</CheckoutButton>
-              </Summary>
-            </>
-          ) : (
-            <EmptyCart>
-              <p>Your cart is currently empty.</p>
-              <Link to="/">Continue Shopping</Link>
-            </EmptyCart>
-          )}
-        </>
-      )}
-    </Container>
-  );
-};*/
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import { incrementQuantity, decrementQuantity, resetCart } from '../redux/cartRedux'; // Import resetCart action
-import BuyNow from './BuyNow'; // Import BuyNow component
+import { incrementQuantity, decrementQuantity, resetCart } from '../redux/cartRedux';
+import BuyNow from './BuyNow';
 
 const Cart = () => {
-  const cartProducts = useSelector((state) => state.cart.products);
-  const cartTotal = useSelector((state) => state.cart.total);
-  const user = useSelector((state) => state.user.currentUser);
+  // Add safety checks to ensure cartProducts is always an array
+  const cartProducts = useSelector((state) => state.cart?.products ?? []);
+  const cartTotal = useSelector((state) => state.cart?.total ?? 0);
+  const user = useSelector((state) => state.user?.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showCheckoutForm, setShowCheckoutForm] = useState(false); // State to toggle the BuyNow form
+  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
 
   const handleIncrement = (productId) => {
     dispatch(incrementQuantity(productId));
@@ -110,25 +27,21 @@ const Cart = () => {
       alert('You need to log in to proceed to checkout.');
       return;
     }
-    setShowCheckoutForm(true); // Show the checkout form
+    setShowCheckoutForm(true);
   };
 
-  // Calculate total quantity in the cart
-  const totalQuantity = cartProducts.reduce((acc, product) => acc + product.quantity, 0);
-
-  // Handle successful order placement and reset cart
-  /*const handleOrderSuccess = () => {
-    alert("Order placed successfully!");
-    dispatch(resetCart()); // Reset cart quantities
-    setShowCheckoutForm(false); // Close checkout form
-  };*/
+  // Add safety check here - ensure cartProducts is an array before using reduce
+  const totalQuantity = Array.isArray(cartProducts) 
+    ? cartProducts.reduce((acc, product) => acc + (product?.quantity || 0), 0)
+    : 0;
 
   const handleOrderSuccess = () => {
     alert("Order placed successfully!");
-    dispatch(resetCart()); // Clear the cart
-    setShowCheckoutForm(false); // Close the checkout form
-    navigate('/'); // Redirect to the homepage
+    dispatch(resetCart());
+    setShowCheckoutForm(false);
+    navigate('/');
   };
+
   return (
     <Container>
       {showCheckoutForm ? (
@@ -138,12 +51,12 @@ const Cart = () => {
             _id: 'cart',
             price: cartTotal,
           }}
-          onOrderSuccess={handleOrderSuccess} // Pass the success handler to BuyNow
+          onOrderSuccess={handleOrderSuccess}
         />
       ) : (
         <>
           <Title>Your Shopping Cart</Title>
-          {cartProducts.length > 0 ? (
+          {cartProducts && cartProducts.length > 0 ? (
             <>
               <CartItems>
                 {cartProducts.map((product) => (
@@ -151,13 +64,13 @@ const Cart = () => {
                     <Image src={product.image} alt={product.name} />
                     <Details>
                       <ProductName>{product.title}</ProductName>
-                      <UnitPrice>Unit Price: ${product.price.toFixed(2)}</UnitPrice>
+                      <UnitPrice>Unit Price: ${(product.price || 0).toFixed(2)}</UnitPrice>
                       <Subtotal>
-                        Subtotal: ${(product.price * product.quantity).toFixed(2)}
+                        Subtotal: ${((product.price || 0) * (product.quantity || 0)).toFixed(2)}
                       </Subtotal>
                       <QuantityContainer>
                         <QuantityButton onClick={() => handleDecrement(product._id)}>-</QuantityButton>
-                        <Quantity>{product.quantity}</Quantity>
+                        <Quantity>{product.quantity || 0}</Quantity>
                         <QuantityButton onClick={() => handleIncrement(product._id)}>+</QuantityButton>
                       </QuantityContainer>
                     </Details>
@@ -165,8 +78,8 @@ const Cart = () => {
                 ))}
               </CartItems>
               <Summary>
-                <SummaryText>Total: ${cartTotal.toFixed(2)}</SummaryText>
-                <SummaryText>Total Quantity: {totalQuantity}</SummaryText> {/* Show total quantity */}
+                <SummaryText>Total: ${(cartTotal || 0).toFixed(2)}</SummaryText>
+                <SummaryText>Total Quantity: {totalQuantity}</SummaryText>
                 <CheckoutButton onClick={handleCheckout}>Proceed to Checkout</CheckoutButton>
               </Summary>
             </>
@@ -182,10 +95,9 @@ const Cart = () => {
   );
 };
 
-
-
-
 export default Cart;
+
+// ... rest of your styled components remain the same
 
 const OrderItem = styled.div`
   display: flex;

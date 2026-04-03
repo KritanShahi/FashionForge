@@ -1,105 +1,103 @@
-
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import userReducer from "./userRedux"; // Adjust import paths as needed
+import userReducer from "./userRedux";
 import cartReducer from "./cartRedux";
 
 // Helper function to load state from localStorage
 const loadStateFromLocalStorage = (key) => {
   try {
     const serializedState = localStorage.getItem(key);
-    return serializedState ? JSON.parse(serializedState) : undefined;
+    if (serializedState === null) {
+      return undefined; // Return undefined for no data
+    }
+    return JSON.parse(serializedState);
   } catch (error) {
     console.error(`Could not load state for ${key} from localStorage`, error);
     return undefined;
   }
 };
 
-// Hydrate the initial state for user and cart
-const preloadedState = {
-  user: loadStateFromLocalStorage("user"), // Load user state from localStorage
-  cart: loadStateFromLocalStorage("cart"), // Load cart state from localStorage
-};
-
-const rootReducer = combineReducers({
-  user: userReducer, // Handles user-related state
-  cart: cartReducer, // Handles cart-related state
+// Define initial states (should match your slice initial states)
+const getInitialCartState = () => ({
+  products: [],
+  quantity: 0,
+  total: 0,
 });
 
-const store = configureStore({
-  reducer: rootReducer,
-  preloadedState, // Set preloaded state for both user and cart persistence
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false, // Disable if you have non-serializable values
-    }),
-  devTools: process.env.NODE_ENV !== "production", // Enable Redux DevTools in non-production environments
-});
+const getInitialUserState = () => null; // or whatever your user initial state is
 
-// Listen for state changes and persist both cart and user to localStorage
-store.subscribe(() => {
-  try {
-    const state = store.getState();
-    const cartState = state.cart;
-    const userState = state.user;
-
-    // Persist both cart and user states in localStorage
-    localStorage.setItem("cart", JSON.stringify(cartState));
-    localStorage.setItem("user", JSON.stringify(userState));
-  } catch (error) {
-    console.error("Could not save state to localStorage", error);
-  }
-});
-
-export default store;
-
-
-/*import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import userReducer from "./userRedux"; // Adjust import paths as needed
-
-import cartReducer from "./cartRedux";
-
-// Helper function to load state from localStorage
-const loadStateFromLocalStorage = () => {
-  try {
-    const serializedState = localStorage.getItem("cart");
-    return serializedState ? JSON.parse(serializedState) : undefined;
-  } catch (error) {
-    console.error("Could not load state from localStorage", error);
+// Load and validate cart state from localStorage
+const loadCartState = () => {
+  const savedCart = loadStateFromLocalStorage("cart");
+  
+  // If no saved cart or saved cart is invalid, return undefined to use reducer's initial state
+  if (!savedCart) {
     return undefined;
   }
+  
+  // Validate that saved cart has the required structure
+  if (!savedCart.products || !Array.isArray(savedCart.products)) {
+    console.warn("Invalid cart state found in localStorage, using default");
+    return undefined;
+  }
+  
+  return savedCart;
 };
 
-// Hydrate the cart state
+// Load and validate user state from localStorage
+const loadUserState = () => {
+  const savedUser = loadStateFromLocalStorage("user");
+  
+  // Validate user state if needed
+  if (!savedUser) {
+    return undefined;
+  }
+  
+  return savedUser;
+};
+
+// Create preloaded state with validation
 const preloadedState = {
-  cart: loadStateFromLocalStorage(),
+  user: loadUserState(),
+  cart: loadCartState(),
 };
 
 const rootReducer = combineReducers({
-  user: userReducer, // Handles user-related state
-  cart: cartReducer, // Handles cart-related state
+  user: userReducer,
+  cart: cartReducer,
 });
 
 const store = configureStore({
   reducer: rootReducer,
-  preloadedState, // Set preloaded state for cart persistence
+  preloadedState, // This will merge with reducer's initial state
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Disable if you have non-serializable values
+      serializableCheck: false,
     }),
-  devTools: process.env.NODE_ENV !== "production", // Enable Redux DevTools in non-production environments
+  devTools: process.env.NODE_ENV !== "production",
 });
 
-// Listen for state changes and persist the cart to localStorage
+// Listen for state changes and persist to localStorage
 store.subscribe(() => {
   try {
     const state = store.getState();
-    const cartState = state.cart;
-    localStorage.setItem("cart", JSON.stringify(cartState));
+    
+    // Only persist cart if it's valid
+    if (state.cart && state.cart.products && Array.isArray(state.cart.products)) {
+      localStorage.setItem("cart", JSON.stringify(state.cart));
+    } else {
+      // If cart is invalid, clear localStorage to prevent issues
+      localStorage.removeItem("cart");
+    }
+    
+    // Persist user state if needed
+    if (state.user) {
+      localStorage.setItem("user", JSON.stringify(state.user));
+    } else {
+      localStorage.removeItem("user");
+    }
   } catch (error) {
     console.error("Could not save state to localStorage", error);
   }
 });
 
 export default store;
-
-*/
