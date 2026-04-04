@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import styled, { createGlobalStyle,keyframes } from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import ProductBanner from './ProductBanner';
-import { useSelector } from "react-redux";
-import Navbar from '../component/Navbar';
 import Rating from '@mui/material/Rating'; // Import Rating component
-import { useDispatch } from "react-redux";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from 'react-router-dom';
+import styled, { createGlobalStyle, keyframes } from 'styled-components';
+import ChatBot from '../component/ChatBot';
+import Navbar from '../component/Navbar';
 import { logout } from "../redux/userRedux";
+import ProductBanner from './ProductBanner';
 
 
 
@@ -92,6 +92,7 @@ const Home = () => {
             </Link>
           ))}
         </ProductGrid>
+        <ChatBot />
       </Container>
     </>
   );
