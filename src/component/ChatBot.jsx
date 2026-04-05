@@ -172,13 +172,13 @@ const ChatContainer = styled(motion.div)`
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 380px;
-  height: 550px;
+  width: 450px;
+  height: 650px;
   background: white;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
 `;
 
 const ChatHeader = styled.div`
@@ -198,18 +198,18 @@ const CloseButton = styled.button` background:none; border:none; color:white; cu
 
 const MessagesContainer = styled.div`
   flex:1;
-  padding:15px;
+  padding:20px;
   overflow-y:auto;
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:12px;
 `;
 
 const MessageBubble = styled.div`
-  max-width:80%;
-  padding:10px 14px;
-  border-radius:18px;
-  font-size:14px;
+  max-width:75%;
+  padding:12px 16px;
+  border-radius:20px;
+  font-size:15px;
   word-wrap: break-word;
   ${props => props.sender === 'user'
     ? `align-self:flex-end; background:#667eea; color:white;`
@@ -226,17 +226,18 @@ const TypingDot = styled.div`
 `;
 
 const InputContainer = styled.div`
-  padding:15px;
+  padding:18px;
   border-top:1px solid #e1e8ed;
   display:flex;
-  gap:10px;
+  gap:12px;
 `;
 
 const MessageInput = styled.input`
   flex:1;
-  padding:10px;
+  padding:12px;
   border-radius:25px;
   border:1px solid #e1e8ed;
+  font-size:14px;
 `;
 
 const SendButton = styled.button`
@@ -260,16 +261,12 @@ const FAQContainer = styled.div`
 const FAQButton = styled.button`
   background:#f1f3f6;
   border:none;
-  border-radius:20px;
-  padding:6px 12px;
+  border-radius:22px;
+  padding:8px 14px;
   cursor:pointer;
-  font-size:12px;
+  font-size:13px;
   white-space:nowrap;
   &:hover { background:#e0e4ea; }
 `;
 
 export default ChatBot;
-
-
-
-
