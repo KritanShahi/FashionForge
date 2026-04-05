@@ -75,30 +75,32 @@ const ChatBot = () => {
 
       // ================= NAVIGATION ACTIONS =================
 
-      if (response.data.action === "navigate_cart") {
+    // ================= NAVIGATION ACTIONS =================
 
-        setTimeout(() => {
-          navigate("/cart");
-        }, 800);
+if (response.data.action === "navigate_cart") {
+  setTimeout(() => {
+    navigate("/cart");
+  }, 800);
+}
 
-      }
+if (response.data.action === "navigate_products") {
+  setTimeout(() => {
+    navigate("/products");
+  }, 800);
+}
 
-      if (response.data.action === "navigate_products") {
+if (response.data.action === "navigate_orders") {
+  setTimeout(() => {
+    navigate("/orders");
+  }, 800);
+}
 
-        setTimeout(() => {
-          navigate("/products");
-        }, 800);
-
-      }
-
-      if (response.data.action === "navigate_orders") {
-
-        setTimeout(() => {
-          navigate("/orders");
-        }, 800);
-
-      }
-
+// ⭐ NEW: Navigate to specific product
+if (response.data.action === "navigate_product" && response.data.productId) {
+  setTimeout(() => {
+    navigate(`/product/${response.data.productId}`);
+  }, 800);
+}
     } catch (error) {
 
       console.error(
