@@ -5,12 +5,17 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // ⭐ NEW
+import { useNavigate } from 'react-router-dom';
+
+const FAQS = [
+  "How many Products are There?",
+  "Cheapest product",
+  "Most expensive product",
+  "Go to cart",
+];
 
 const ChatBot = () => {
-
   const [isOpen, setIsOpen] = useState(false);
-
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -18,125 +23,61 @@ const ChatBot = () => {
       sender: 'bot'
     }
   ]);
-
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-
   const messagesEndRef = useRef(null);
-
-  const navigate = useNavigate(); // ⭐ NEW
+  const navigate = useNavigate();
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth"
-    });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  useEffect(() => { scrollToBottom(); }, [messages]);
 
-  // ================= SEND MESSAGE =================
+  const sendMessage = async (msg) => {
+    if (!msg.trim()) return;
 
-  const handleSendMessage = async () => {
-
-    if (inputMessage.trim() === '') return;
-
-    const userMessage = {
-      id: messages.length + 1,
-      text: inputMessage,
-      sender: 'user',
-    };
-
+    const userMessage = { id: messages.length + 1, text: msg, sender: 'user' };
     setMessages(prev => [...prev, userMessage]);
-
     setInputMessage('');
     setIsTyping(true);
 
     try {
-
-      const response = await axios.post(
-        'http://localhost:8080/api/chat',
-        {
-          message: inputMessage,
-          history: messages,
-        }
-      );
+      const response = await axios.post('http://localhost:8080/api/chat', {
+        message: msg,
+        history: messages
+      });
 
       const botMessage = {
         id: messages.length + 2,
-        text:
-          response.data.reply ||
-          "Sorry, I couldn't understand that.",
+        text: response.data.reply || "Sorry, I couldn't understand that.",
         sender: 'bot',
       };
 
       setMessages(prev => [...prev, botMessage]);
 
-      // ================= NAVIGATION ACTIONS =================
+      // NAVIGATION ACTIONS
+      if (response.data.action === "navigate_cart") setTimeout(() => navigate("/cart"), 800);
+      if (response.data.action === "navigate_products") setTimeout(() => navigate("/products"), 800);
+      if (response.data.action === "navigate_orders") setTimeout(() => navigate("/orders"), 800);
+      if (response.data.action === "navigate_product" && response.data.productId)
+        setTimeout(() => navigate(`/product/${response.data.productId}`), 800);
 
-    // ================= NAVIGATION ACTIONS =================
-
-if (response.data.action === "navigate_cart") {
-  setTimeout(() => {
-    navigate("/cart");
-  }, 800);
-}
-
-if (response.data.action === "navigate_products") {
-  setTimeout(() => {
-    navigate("/products");
-  }, 800);
-}
-
-if (response.data.action === "navigate_orders") {
-  setTimeout(() => {
-    navigate("/orders");
-  }, 800);
-}
-
-// ⭐ NEW: Navigate to specific product
-if (response.data.action === "navigate_product" && response.data.productId) {
-  setTimeout(() => {
-    navigate(`/product/${response.data.productId}`);
-  }, 800);
-}
     } catch (error) {
-
-      console.error(
-        'Error fetching bot response:',
-        error
-      );
-
+      console.error('Error fetching bot response:', error);
       const botMessage = {
         id: messages.length + 2,
-        text:
-          "Sorry, I'm having trouble right now. Please try again later.",
+        text: "Sorry, I'm having trouble right now. Please try again later.",
         sender: 'bot',
       };
-
       setMessages(prev => [...prev, botMessage]);
-
     } finally {
-
       setIsTyping(false);
-
     }
-
   };
 
-  // ================= ENTER KEY =================
-
-  const handleKeyPress = (e) => {
-
-    if (e.key === 'Enter' && !e.shiftKey) {
-
-      e.preventDefault();
-      handleSendMessage();
-
-    }
-
-  };
+  const handleSendMessage = () => sendMessage(inputMessage);
+  const handleKeyPress = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } };
 
   return (
     <>
@@ -151,128 +92,68 @@ if (response.data.action === "navigate_product" && response.data.productId) {
       </ChatIconButton>
 
       <AnimatePresence>
-
         {isOpen && (
-
           <ChatContainer
-            initial={{
-              opacity: 0,
-              y: 50,
-              scale: 0.8
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              scale: 1
-            }}
-            exit={{
-              opacity: 0,
-              y: 50,
-              scale: 0.8
-            }}
+            initial={{ opacity: 0, y: 50, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.8 }}
           >
 
             <ChatHeader>
-
               <HeaderContent>
-
-                <Avatar>
-                  <ChatIcon />
-                </Avatar>
-
+                <Avatar><ChatIcon /></Avatar>
                 <HeaderText>
-
-                  <HeaderTitle>
-                    Fashion Assistant
-                  </HeaderTitle>
-
-                  <HeaderStatus>
-                    Online
-                  </HeaderStatus>
-
+                  <HeaderTitle>Fashion Assistant</HeaderTitle>
+                  <HeaderStatus>Online</HeaderStatus>
                 </HeaderText>
-
               </HeaderContent>
-
-              <CloseButton
-                onClick={() => setIsOpen(false)}
-              >
-                <CloseIcon />
-              </CloseButton>
-
+              <CloseButton onClick={() => setIsOpen(false)}><CloseIcon /></CloseButton>
             </ChatHeader>
 
-            <MessagesContainer>
-
-              {messages.map((message) => (
-
-                <MessageBubble
-                  key={message.id}
-                  sender={message.sender}
-                >
-                  {message.text}
-                </MessageBubble>
-
+            {/* ================= FAQ BUTTONS ================= */}
+            <FAQContainer>
+              {FAQS.map((faq, idx) => (
+                <FAQButton key={idx} onClick={() => sendMessage(faq)}>
+                  {faq}
+                </FAQButton>
               ))}
+            </FAQContainer>
 
-              {isTyping && (
-
-                <TypingIndicator>
-                  <TypingDot />
-                  <TypingDot />
-                  <TypingDot />
-                </TypingIndicator>
-
-              )}
-
+            <MessagesContainer>
+              {messages.map(msg => (
+                <MessageBubble key={msg.id} sender={msg.sender}>
+                  {msg.text}
+                </MessageBubble>
+              ))}
+              {isTyping && <TypingIndicator><TypingDot /><TypingDot /><TypingDot /></TypingIndicator>}
               <div ref={messagesEndRef} />
-
             </MessagesContainer>
 
             <InputContainer>
-
               <MessageInput
                 type="text"
                 placeholder="Type your message..."
                 value={inputMessage}
-                onChange={(e) =>
-                  setInputMessage(e.target.value)
-                }
+                onChange={e => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
               />
-
-              <SendButton
-                onClick={handleSendMessage}
-              >
-                <SendIcon />
-              </SendButton>
-
+              <SendButton onClick={handleSendMessage}><SendIcon /></SendButton>
             </InputContainer>
 
           </ChatContainer>
-
         )}
-
       </AnimatePresence>
     </>
   );
-
 };
 
 // ================= ANIMATIONS =================
-
-const pulse = keyframes`
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-`;
-
 const typing = keyframes`
   0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-10px); }
+  30% { transform: translateY(-5px); }
 `;
 
 // ================= STYLES =================
-
 const ChatIconButton = styled(motion.button)`
   position: fixed;
   bottom: 30px;
@@ -292,11 +173,12 @@ const ChatContainer = styled(motion.div)`
   bottom: 30px;
   right: 30px;
   width: 380px;
-  height: 500px;
+  height: 550px;
   background: white;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 `;
 
 const ChatHeader = styled.div`
@@ -307,92 +189,52 @@ const ChatHeader = styled.div`
   justify-content: space-between;
 `;
 
-const HeaderContent = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const Avatar = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-`;
-
+const HeaderContent = styled.div` display:flex; align-items:center; gap:12px; `;
+const Avatar = styled.div` width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; `;
 const HeaderText = styled.div``;
-
-const HeaderTitle = styled.div`
-  font-size:16px;
-  font-weight:600;
-`;
-
-const HeaderStatus = styled.div`
-  font-size:12px;
-`;
-
-const CloseButton = styled.button`
-  background:none;
-  border:none;
-  color:white;
-  cursor:pointer;
-`;
+const HeaderTitle = styled.div` font-size:16px; font-weight:600; `;
+const HeaderStatus = styled.div` font-size:12px; `;
+const CloseButton = styled.button` background:none; border:none; color:white; cursor:pointer; `;
 
 const MessagesContainer = styled.div`
   flex:1;
-  padding:20px;
+  padding:15px;
   overflow-y:auto;
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:10px;
 `;
 
 const MessageBubble = styled.div`
   max-width:80%;
-  padding:12px 16px;
+  padding:10px 14px;
   border-radius:18px;
   font-size:14px;
-
-  ${props =>
-    props.sender === 'user'
-      ? `
-    align-self:flex-end;
-    background:#667eea;
-    color:white;
-  `
-      : `
-    align-self:flex-start;
-    background:white;
-    border:1px solid #e1e8ed;
-  `}
+  word-wrap: break-word;
+  ${props => props.sender === 'user'
+    ? `align-self:flex-end; background:#667eea; color:white;`
+    : `align-self:flex-start; background:#f1f3f6; color:black;`}
 `;
 
-const TypingIndicator = styled.div`
-  display:flex;
-  gap:4px;
-`;
-
+const TypingIndicator = styled.div` display:flex; gap:4px; `;
 const TypingDot = styled.div`
-  width:8px;
-  height:8px;
+  width:6px;
+  height:6px;
   background:#667eea;
   border-radius:50%;
-  animation:${typing} 1.4s infinite;
+  animation:${typing} 1.2s infinite;
 `;
 
 const InputContainer = styled.div`
-  padding:20px;
+  padding:15px;
   border-top:1px solid #e1e8ed;
   display:flex;
-  gap:12px;
+  gap:10px;
 `;
 
 const MessageInput = styled.input`
   flex:1;
-  padding:12px;
+  padding:10px;
   border-radius:25px;
   border:1px solid #e1e8ed;
 `;
@@ -407,4 +249,27 @@ const SendButton = styled.button`
   cursor:pointer;
 `;
 
+// ================= FAQ BUTTONS =================
+const FAQContainer = styled.div`
+  display:flex;
+  gap:8px;
+  padding:10px 15px;
+  overflow-x:auto;
+`;
+
+const FAQButton = styled.button`
+  background:#f1f3f6;
+  border:none;
+  border-radius:20px;
+  padding:6px 12px;
+  cursor:pointer;
+  font-size:12px;
+  white-space:nowrap;
+  &:hover { background:#e0e4ea; }
+`;
+
 export default ChatBot;
+
+
+
+
