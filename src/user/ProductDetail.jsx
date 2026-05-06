@@ -11,7 +11,7 @@ import CustomerReview from './CustomerReview';
 import BuyNow from '../component/BuyNow';
 import { logout } from "../redux/userRedux";
 import StarIcon from '@mui/icons-material/Star';
-import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -368,35 +368,3 @@ const BuyNowButton = styled.button`
 `;
 
 export default ProductDetail;
-
-
-//             <Stars>{'★'.repeat(Math.floor(rating)) + (rating % 1 ? '☆' : '')}</Stars>
-
-
-/*
-  const renderStars = () => {
-    const fullStars = Array(Math.floor(rating)).fill(<StarIcon key="full" />);
-    const halfStar = rating % 1 ? [<StarBorderPurple500Icon key="half" />] : [];
-    return [...fullStars, ...halfStar];
-  };
-*/
-
-/*
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/api/products/${id}`);
-        setProduct(response.data);
-        setRating(response.data.rating || 0);
-        setRatingCount(response.data.ratingCount || 0);
-
-        // Check if the user has already rated
-        if (user && response.data.ratedUsers?.includes(user._id)) {
-          setUserHasRated(true);
-        }
-      } catch (error) {
-        console.error('Error fetching product:', error);
-      }
-    };
-    fetchProduct();
-  }, [id, user]);*/

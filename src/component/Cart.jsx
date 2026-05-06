@@ -97,64 +97,6 @@ const Cart = () => {
 
 export default Cart;
 
-// ... rest of your styled components remain the same
-
-const OrderItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 15px;
-  margin-bottom: 10px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-`;
-
-const Total = styled.div`
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 20px;
-  text-align: right;
-`;
-
-
-const OrderForm = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-`;
-
-const OrderSummary = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 600px;
-  width: 100%;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
 
 // Styles
 const Container = styled.div`

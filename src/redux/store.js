@@ -16,14 +16,6 @@ const loadStateFromLocalStorage = (key) => {
   }
 };
 
-// Define initial states (should match your slice initial states)
-const getInitialCartState = () => ({
-  products: [],
-  quantity: 0,
-  total: 0,
-});
-
-const getInitialUserState = () => null; // or whatever your user initial state is
 
 // Load and validate cart state from localStorage
 const loadCartState = () => {

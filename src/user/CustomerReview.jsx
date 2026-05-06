@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
+
 
 const CustomerReview = ({ comments, newComment, setNewComment, handleAddComment, handleEditComment, handleDeleteComment }) => {
   const [editingCommentId, setEditingCommentId] = useState(null);

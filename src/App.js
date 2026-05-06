@@ -1,7 +1,5 @@
 
 import React from 'react';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import Login from './component/Login';
 import Signup from './component/Signup';
 import Home from './user/Home';
@@ -15,14 +13,14 @@ import ProductDetail from './user/ProductDetail';
 import Cart from './component/Cart';
 import EditProduct from './admin/EditProduct';
 import ForgetPassword from './component/ForgetPassword';
-import BuyNow from './component/BuyNow';
+
 import OrderDetails from './admin/OrderDetails';
 
 import AddProduct from './admin/AddProduct';
 import WaitingOrder from './user/WaitingOrder';
 
 export default function App() {
-  const user = useSelector((state) => state.user.currentUser);
+
 
   return (
     <BrowserRouter>
