@@ -9,11 +9,6 @@ import Navbar from '../component/Navbar';
 import { logout } from "../redux/userRedux";
 import ProductBanner from './ProductBanner';
 
-
-
-
-
-
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,10 +16,6 @@ const Home = () => {
   const quantity = useSelector(state => state.cart.quantity);
 
   const dispatch = useDispatch();
-
-
-
-
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -97,9 +88,6 @@ const Home = () => {
     </>
   );
 };
-
-
-
 // Keyframes for scrolling animation
 const scroll = keyframes`
   0% {
