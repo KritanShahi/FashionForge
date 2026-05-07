@@ -111,7 +111,7 @@ const Signup = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post('http://localhost:8080/api/signup', formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signup`, formData);
       console.log('Registration successful:', response.data);
 
       if (formData.isAdmin) {

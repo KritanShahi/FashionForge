@@ -117,7 +117,7 @@ const BuyNow = ({ onClose, product, onOrderSuccess }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/orders/buy",
+        `${process.env.REACT_APP_API_URL}/api/orders/buy`,
         orderData
       );
 

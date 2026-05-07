@@ -14,7 +14,7 @@ const OrderManagement = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8080/api/orders');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders`);
         setOrders(response.data);
         setLoading(false);
       } catch (error) {
@@ -34,7 +34,7 @@ const OrderManagement = () => {
       updatedOrder.status = 'Cancelled';  // Update the status to 'Cancelled'
 
       // Make PUT request to cancel the order
-      await axios.put(`http://localhost:8080/api/orders/${orderId}/cancel`, updatedOrder);
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}/cancel`, updatedOrder);
       
       // Update the state with the cancelled order
       setOrders((prevOrders) => prevOrders.map(order => order._id === orderId ? updatedOrder : order));

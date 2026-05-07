@@ -11,7 +11,7 @@ const EditProduct = () => {
 
   useEffect(() => {
     if (productId) {
-      axios.get(`http://localhost:8080/api/products/${productId}`)
+      axios.get(`${process.env.REACT_APP_API_URL}/api/products/${productId}`)
         .then(response => {
           setProduct(response.data);
         })
@@ -38,7 +38,7 @@ const EditProduct = () => {
   };
 
   const handleSave = () => {
-    axios.put(`http://localhost:8080/api/products/${productId}`, product)
+    axios.put(`${process.env.REACT_APP_API_URL}/api/products/${productId}`, product)
       .then(response => {
         navigate('/admin/product'); // Navigate back to the ManageProducts page after saving
       })

@@ -44,7 +44,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/products/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
         setProduct(response.data);
         setRating(response.data.rating || 0);
         setRatingCount(response.data.ratingCount || 0);
@@ -92,7 +92,7 @@ const ProductDetail = () => {
 
     try {
       // Send the rating request to the backend
-      const response = await axios.post(`http://localhost:8080/api/products/${id}/rate`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/products/${id}/rate`, {
         userId: user._id,
         rating: 1, // This is a placeholder for the rating. You can modify based on your requirement (e.g., increment by 1)
       });
@@ -129,7 +129,7 @@ const ProductDetail = () => {
   const handleAddComment = async () => {
     if (newComment) {
       try {
-        const response = await axios.post(`http://localhost:8080/api/comment/${id}/comments`, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/comment/${id}/comments`, {
           user: 'You',
           text: newComment,
         });
@@ -144,7 +144,7 @@ const ProductDetail = () => {
   const handleEditComment = async (commentId, updatedText) => {
     try {
 
-      await axios.put(`http://localhost:8080/api/comment/${id}/comments/${commentId}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/comment/${id}/comments/${commentId}`, {
 
         text: updatedText,
       });
@@ -161,7 +161,7 @@ const ProductDetail = () => {
   const handleDeleteComment = async (commentId) => {
     try {
 
-      await axios.delete(`http://localhost:8080/api/comment/${id}/comments/${commentId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/${id}/comments/${commentId}`);
 
       setComments((prevComments) => prevComments.filter((comment) => comment._id !== commentId));
     } catch (error) {

@@ -11,7 +11,7 @@ const ManageProducts = () => {
   // Function to refresh the product list
   const refreshProductList = () => {
     axios
-      .get('http://localhost:8080/api/products')
+      .get(`${process.env.REACT_APP_API_URL}/api/products`)
       .then((response) => {
         setProducts(response.data);
       })
@@ -38,7 +38,7 @@ const ManageProducts = () => {
   const handleDelete = (index) => {
     const productId = products[index]._id;
     axios
-      .delete(`http://localhost:8080/api/products/${productId}`)
+      .delete(`${process.env.REACT_APP_API_URL}/api/products/${productId}`)
       .then(() => {
         const updatedProducts = products.filter((_, i) => i !== index);
         setProducts(updatedProducts);

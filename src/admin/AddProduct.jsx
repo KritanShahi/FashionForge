@@ -69,7 +69,7 @@ const AddProduct = () => {
 
     // Post the new product to the backend
     axios
-      .post('http://localhost:8080/api/products', newProduct)
+      .post(`${process.env.REACT_APP_API_URL}/api/products`, newProduct)
       .then((response) => {
         console.log('Product added:', response.data);
 
@@ -80,23 +80,7 @@ const AddProduct = () => {
         console.error('Error adding product:', error);
       });
   };
-/*
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  
-    // Post the new product to the backend
-    axios
-      .post('http://localhost:8080/api/products', newProduct)
-      .then((response) => {
-        console.log('Product added:', response.data);
-  
-        // Redirect back to ManageProducts after adding
-        navigate('/admin/product', { state: { refresh: true } });
-      })
-      .catch((error) => {
-        console.error('Error adding product:', error);
-      });
-  };*/
+
     const handleCancel = () => {
     navigate('/admin/product'); // Navigate back to the ManageProducts page when canceled
   };

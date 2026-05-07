@@ -16,7 +16,7 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/orders/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/${id}`);
         setOrderDetails(response.data);
 
         // If a delivery date exists, prefill it
@@ -34,7 +34,7 @@ const OrderDetails = () => {
   // Handle update order status
   const handleUpdateStatus = async (newStatus) => {
     try {
-      await axios.put(`http://localhost:8080/api/orders/${id}`, { status: newStatus });
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/orders/${id}`, { status: newStatus });
       alert(`Order status updated to ${newStatus}!`);
       setOrderDetails({ ...orderDetails, status: newStatus });
     } catch (error) {
@@ -51,7 +51,7 @@ const OrderDetails = () => {
 
     try {
       setIsSaving(true);
-      await axios.put(`http://localhost:8080/api/orders/${id}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/orders/${id}`, {
         ...orderDetails,
         deliveryDate,
       });

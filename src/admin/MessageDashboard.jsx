@@ -16,7 +16,7 @@ const MessageDashboard = () => {
 
   useEffect(() => {
     if (productId) {
-      axios.get(`http://localhost:8080/api/products/${productId}`)
+      axios.get(`${process.env.REACT_APP_API_URL}/api/products/${productId}`)
         .then((response) => {
           const allComments = response.data.comments || [];
           setMessages(allComments);
@@ -33,7 +33,7 @@ const MessageDashboard = () => {
       return;
     }
 
-    axios.post(`http://localhost:8080/api/comment/${productId}/comments/${commentId}/reply`, { user: 'currentUser', text: reply })
+    axios.post(`${process.env.REACT_APP_API_URL}/api/comment/${productId}/comments/${commentId}/reply`, { user: 'currentUser', text: reply })
       .then((response) => {
         setMessages((prevMessages) =>
           prevMessages.map((msg) =>
@@ -49,7 +49,7 @@ const MessageDashboard = () => {
   };
 
   const deleteComment = (commentId) => {
-    axios.delete(`http://localhost:8080/api/comment/${productId}/comments/${commentId}`)
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/${productId}/comments/${commentId}`)
       .then(() => {
         setMessages((prevMessages) => prevMessages.filter((msg) => msg._id !== commentId));
       })
@@ -59,7 +59,7 @@ const MessageDashboard = () => {
   };
 
   const deleteReply = (commentId, replyId) => {
-    axios.delete(`http://localhost:8080/api/comment/${productId}/comments/${commentId}/replies/${replyId}`)
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/${productId}/comments/${commentId}/replies/${replyId}`)
       .then(() => {
         setMessages((prevMessages) =>
           prevMessages.map((msg) =>
@@ -80,7 +80,7 @@ const MessageDashboard = () => {
   };
 
   const submitEditReply = (commentId) => {
-    axios.put(`http://localhost:8080/api/comment/${productId}/comments/${commentId}/replies/${editReplyId}`, { text: editReplyText })
+    axios.put(`${process.env.REACT_APP_API_URL}/api/comment/${productId}/comments/${commentId}/replies/${editReplyId}`, { text: editReplyText })
       .then((response) => {
         setMessages((prevMessages) =>
           prevMessages.map((msg) =>

@@ -7,7 +7,7 @@ export const login = async (dispatch, user) => {
 
   try {
     // Send login request to the server
-    const res = await axios.post("http://localhost:8080/api/login", user);
+    const res = await axios.post("https://fashionforge-back.onrender.com/api/auth/login", user);
 
     // Dispatch login success with the user data returned from server
     dispatch(loginSuccess(res.data));
