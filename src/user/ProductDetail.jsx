@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import styled, { createGlobalStyle } from 'styled-components';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { useDispatch, useSelector } from 'react-redux';
-import { addProduct } from '../redux/cartRedux';
-import Navbar from '../component/Navbar';
-import { Add, Remove } from '@mui/icons-material';
-import CustomerReview from './CustomerReview';
-import BuyNow from '../component/BuyNow';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import styled, { createGlobalStyle } from "styled-components";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "../redux/cartRedux";
+import Navbar from "../component/Navbar";
+import { Add, Remove } from "@mui/icons-material";
+import CustomerReview from "./CustomerReview";
+import BuyNow from "../component/BuyNow";
 import { logout } from "../redux/userRedux";
-import StarIcon from '@mui/icons-material/Star';
-
-/* ================= GLOBAL ================= */
+import StarIcon from "@mui/icons-material/Star";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -28,8 +26,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-/* ================= COMPONENT ================= */
-
 const ProductDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -38,11 +34,14 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
+
+  const [comments] = useState([]);
+
+  const [newComment, setNewComment] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
-  const [userHasRated, setUserHasRated] = useState(false);
+
+  const [, setUserHasRated] = useState(false);
 
   const cartQuantity = useSelector((state) => state.cart.quantity);
   const user = useSelector((state) => state.user.currentUser);
@@ -50,7 +49,10 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/products/${id}`,
+        );
+
         setProduct(res.data);
         setRating(res.data.rating || 0);
         setRatingCount(res.data.ratingCount || 0);
@@ -68,7 +70,7 @@ const ProductDetail = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    navigate("/login");
   };
 
   const handleAddToCart = () => {
@@ -77,8 +79,10 @@ const ProductDetail = () => {
   };
 
   const handleQuantity = (type) => {
-    if (type === 'dec') {
-      quantity > 1 && setQuantity(quantity - 1);
+    if (type === "dec") {
+      if (quantity > 1) {
+        setQuantity(quantity - 1);
+      }
     } else {
       setQuantity(quantity + 1);
     }
@@ -89,31 +93,33 @@ const ProductDetail = () => {
   return (
     <>
       <GlobalStyle />
-      <Container>
 
+      <Container>
         <Navbar handleLogout={handleLogout} quantity={cartQuantity} />
 
         <Wrapper>
-
           <ImageContainer>
             <Image src={product.image} alt={product.name} />
           </ImageContainer>
 
           <InfoContainer>
-
             <Title>{product.name}</Title>
+
             <Desc>{product.description}</Desc>
+
             <Price>Rs {product.price}</Price>
 
             <RatingBox>
-              <span>Rating: {rating.toFixed(1)} ({ratingCount})</span>
+              <span>
+                Rating: {rating.toFixed(1)} ({ratingCount})
+              </span>
 
               <Stars>
                 {[...Array(5)].map((_, i) => (
                   <StarIcon
                     key={i}
                     style={{
-                      color: i < Math.round(rating) ? "#FFD700" : "#ddd"
+                      color: i < Math.round(rating) ? "#FFD700" : "#ddd",
                     }}
                   />
                 ))}
@@ -125,16 +131,18 @@ const ProductDetail = () => {
             </RatingBox>
 
             <QuantityBox>
-              <Remove onClick={() => handleQuantity('dec')} />
+              <Remove onClick={() => handleQuantity("dec")} />
+
               <Qty>{quantity}</Qty>
-              <Add onClick={() => handleQuantity('inc')} />
+
+              <Add onClick={() => handleQuantity("inc")} />
             </QuantityBox>
 
             <ButtonRow>
               <CartBtn onClick={handleAddToCart}>Add to Cart</CartBtn>
+
               <BuyBtn onClick={() => setIsOrderFormOpen(true)}>Buy Now</BuyBtn>
             </ButtonRow>
-
           </InfoContainer>
         </Wrapper>
 
@@ -150,14 +158,12 @@ const ProductDetail = () => {
             product={{ ...product, quantity }}
           />
         )}
-
       </Container>
     </>
   );
 };
 
 export default ProductDetail;
-
 
 const Container = styled.div`
   width: 100%;
@@ -178,7 +184,6 @@ const Wrapper = styled.div`
     margin: auto;
   }
 `;
-
 
 const ImageContainer = styled.div`
   flex: 1;
@@ -223,8 +228,6 @@ const Price = styled.p`
   font-weight: bold;
 `;
 
-
-
 const RatingBox = styled.div`
   display: flex;
   align-items: center;
@@ -243,7 +246,6 @@ const LoveButton = styled.button`
   color: red;
 `;
 
-
 const QuantityBox = styled.div`
   display: flex;
   align-items: center;
@@ -258,8 +260,6 @@ const Qty = styled.span`
   justify-content: center;
   align-items: center;
 `;
-
-
 
 const ButtonRow = styled.div`
   display: flex;
@@ -286,7 +286,6 @@ const BuyBtn = styled.button`
   border: none;
   cursor: pointer;
 `;
-
 
 const Loading = styled.div`
   padding: 20px;

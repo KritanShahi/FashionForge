@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-
-
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -16,7 +14,6 @@ const Container = styled.div`
   padding: 15px;
 `;
 
-
 const Wrapper = styled.div`
   width: 100%;
   max-width: 380px;
@@ -25,7 +22,7 @@ const Wrapper = styled.div`
   padding: 20px;
 
   border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 
   display: flex;
   flex-direction: column;
@@ -38,22 +35,17 @@ const Wrapper = styled.div`
   }
 `;
 
-
-
 const Title = styled.h1`
   font-size: 22px;
   font-weight: 400;
   text-align: center;
 `;
 
-
-
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 10px;
 `;
-
 
 const Input = styled.input`
   width: 100%;
@@ -76,8 +68,6 @@ const Input = styled.input`
   }
 `;
 
-
-
 const Button = styled.button`
   width: 100%;
   padding: 12px;
@@ -98,14 +88,11 @@ const Button = styled.button`
   }
 `;
 
-
 const Error = styled.span`
   color: red;
   font-size: 12px;
   text-align: center;
 `;
-
-
 
 const StyledLink = styled(Link)`
   text-align: center;
@@ -118,8 +105,6 @@ const StyledLink = styled(Link)`
   }
 `;
 
-
-
 function ForgetPassword() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -129,12 +114,26 @@ function ForgetPassword() {
   const [serverError, setServerError] = useState("");
 
   const navigate = useNavigate();
-
   const validateForm = () => {
-    if (!username.trim()) return setValidationError("Username required"), false;
-    if (!email.trim()) return setValidationError("Email required"), false;
-    if (newPassword.length < 6) return setValidationError("Min 6 chars"), false;
-    if (newPassword !== confirmPassword) return setValidationError("Passwords mismatch"), false;
+    if (!username.trim()) {
+      setValidationError("Username required");
+      return false;
+    }
+
+    if (!email.trim()) {
+      setValidationError("Email required");
+      return false;
+    }
+
+    if (newPassword.length < 6) {
+      setValidationError("Min 6 chars");
+      return false;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setValidationError("Passwords mismatch");
+      return false;
+    }
 
     setValidationError("");
     return true;
@@ -157,13 +156,10 @@ function ForgetPassword() {
 
   return (
     <Container>
-
       <Wrapper>
-
         <Title>Forget Password</Title>
 
         <Form>
-
           <Input
             placeholder="Username"
             value={username}
@@ -196,14 +192,9 @@ function ForgetPassword() {
 
           <Button onClick={handleClick}>SUBMIT</Button>
 
-          <StyledLink to="/signup">
-            Create new account
-          </StyledLink>
-
+          <StyledLink to="/signup">Create new account</StyledLink>
         </Form>
-
       </Wrapper>
-
     </Container>
   );
 }
