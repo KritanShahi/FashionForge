@@ -12,6 +12,7 @@ import BuyNow from '../component/BuyNow';
 import { logout } from "../redux/userRedux";
 import StarIcon from '@mui/icons-material/Star';
 
+/* ================= GLOBAL ================= */
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -19,159 +20,60 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
+
   body, html, #root {
+    width: 100%;
     height: 100%;
+    font-family: Arial, sans-serif;
   }
 `;
 
-
+/* ================= COMPONENT ================= */
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [product, setProduct] = useState(null);
-  const [rating, setRating] = useState(0); // Initial rating is 0
-  const [ratingCount, setRatingCount] = useState(0); // Initial count is 0
+  const [rating, setRating] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const dispatch = useDispatch();
-  const cartQuantity = useSelector((state) => state.cart.quantity);
-  const navigate = useNavigate();
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
-  const [userHasRated, setUserHasRated] = useState(false); // User rating state
-  const user = useSelector((state) => state.user.currentUser); 
+  const [userHasRated, setUserHasRated] = useState(false);
+
+  const cartQuantity = useSelector((state) => state.cart.quantity);
+  const user = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
-        setProduct(response.data);
-        setRating(response.data.rating || 0);
-        setRatingCount(response.data.ratingCount || 0);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
+        setProduct(res.data);
+        setRating(res.data.rating || 0);
+        setRatingCount(res.data.ratingCount || 0);
 
-        // Check if the user has already rated
-        if (user && response.data.ratedUsers?.includes(user._id)) {
+        if (user && res.data.ratedUsers?.includes(user._id)) {
           setUserHasRated(true);
         }
-      } catch (error) {
-        console.error('Error fetching product:', error);
+      } catch (err) {
+        console.error(err);
       }
     };
+
     fetchProduct();
   }, [id, user]);
-  
-
-
-
-  const handleBuyNowClick = () => {
-    setIsOrderFormOpen(true);
-  };
-
-  const handleCloseOrderForm = () => {
-    setIsOrderFormOpen(false);
-  };
-
-  const handleOrderSubmit = (orderData) => {
-    console.log("Order Submitted:", orderData);
-    // You can send the order data to your backend here.
-  };
-
-
-
-  const handleLoveClick = async () => {
-    if (!user) {
-      alert("You need to log in to rate this product.");
-      return;
-    }
-
-    // Check if the user has already rated
-    if (userHasRated) {
-      alert("You have already rated this product.");
-      return;
-    }
-
-    try {
-      // Send the rating request to the backend
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/products/${id}/rate`, {
-        userId: user._id,
-        rating: 1, // This is a placeholder for the rating. You can modify based on your requirement (e.g., increment by 1)
-      });
-
-      if (response.status === 200) {
-        // Update the rating and count based on the response
-        setRating(response.data.newRating);
-        setRatingCount(response.data.newRatingCount);
-
-        // Mark the user as having rated
-        setUserHasRated(true);
-
-        alert("Thank you for your rating!");
-      }
-    } catch (error) {
-      // Handle any errors from the backend
-      alert(error.response?.data?.message || "An error occurred while submitting your rating.");
-    }
-  };
-
-
-
-
-
 
   const handleLogout = () => {
-   
-    dispatch(logout()); 
-    navigate('/login');// Clear user state
-  };
-
-
-
-  const handleAddComment = async () => {
-    if (newComment) {
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/comment/${id}/comments`, {
-          user: 'You',
-          text: newComment,
-        });
-        setComments(response.data);
-        setNewComment('');
-      } catch (error) {
-        console.error('Error adding comment:', error);
-      }
-    }
-  };
-
-  const handleEditComment = async (commentId, updatedText) => {
-    try {
-
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/comment/${id}/comments/${commentId}`, {
-
-        text: updatedText,
-      });
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment._id === commentId ? { ...comment, text: updatedText } : comment
-        )
-      );
-    } catch (error) {
-      console.error('Error editing comment:', error);
-    }
-  };
-
-  const handleDeleteComment = async (commentId) => {
-    try {
-
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/${id}/comments/${commentId}`);
-
-      setComments((prevComments) => prevComments.filter((comment) => comment._id !== commentId));
-    } catch (error) {
-      console.error('Error deleting comment:', error);
-    }
+    dispatch(logout());
+    navigate('/login');
   };
 
   const handleAddToCart = () => {
-    dispatch(addProduct({ ...product, quantity: parseInt(quantity) }));
-    alert('Product added to cart');
+    dispatch(addProduct({ ...product, quantity }));
+    alert("Added to cart");
   };
 
   const handleQuantity = (type) => {
@@ -182,189 +84,211 @@ const ProductDetail = () => {
     }
   };
 
-
-
-  if (!product) return <div>Loading...</div>;
+  if (!product) return <Loading>Loading...</Loading>;
 
   return (
     <>
       <GlobalStyle />
       <Container>
+
         <Navbar handleLogout={handleLogout} quantity={cartQuantity} />
-        <CenteredContainer>
-          <Content>
-            <Image src={product.image} alt={product.namse} />
-            <Details>
-              <ProductName>{product.name}</ProductName>
-              <ProductDescription>{product.description}</ProductDescription>
-              <ProductPrice>Rs {product.price}</ProductPrice>
 
-              <Rating>
-                <span>Rating: {rating.toFixed(1)} ({ratingCount} votes)</span>
-                <Stars>
-                  {[...Array(5)].map((_, i) => (
-                    <StarIcon 
-                      key={i} 
-                      style={{
-                        color: i < Math.round(rating) ? "#FFD700" : "#e0e0e0",
-                      }} 
-                    />
-                  ))}
-                </Stars>
+        <Wrapper>
 
-                <LoveButton onClick={handleLoveClick}>
-                  <StarBorderIcon />
-                </LoveButton>
-              </Rating>
+          <ImageContainer>
+            <Image src={product.image} alt={product.name} />
+          </ImageContainer>
 
-              <AmountContainer>
-                <label>Quantity:</label>
-                <Remove onClick={() => handleQuantity('dec')} />
-                <Amount>{quantity}</Amount>
-                <Add onClick={() => handleQuantity('inc')} />
-              </AmountContainer>
+          <InfoContainer>
 
-              <ButtonGroup>
-                <AddToCartButton onClick={handleAddToCart}>Add to Cart</AddToCartButton>
-                <BuyNowButton onClick={handleBuyNowClick}>Buy Now</BuyNowButton>
+            <Title>{product.name}</Title>
+            <Desc>{product.description}</Desc>
+            <Price>Rs {product.price}</Price>
 
-                {isOrderFormOpen && (
-        <BuyNow
-          onClose={handleCloseOrderForm}
-          onSubmit={handleOrderSubmit}
-          product={{ ...product, quantity: quantity }} 
-          onOrderSuccess={() => {
-            alert("Order placed successfully!");
-            navigate("/"); // Redirect to the homepage
-          }}
-        />
-      )}
-              </ButtonGroup>
-            </Details>
-          </Content>
-        </CenteredContainer>
+            <RatingBox>
+              <span>Rating: {rating.toFixed(1)} ({ratingCount})</span>
+
+              <Stars>
+                {[...Array(5)].map((_, i) => (
+                  <StarIcon
+                    key={i}
+                    style={{
+                      color: i < Math.round(rating) ? "#FFD700" : "#ddd"
+                    }}
+                  />
+                ))}
+              </Stars>
+
+              <LoveButton>
+                <StarBorderIcon />
+              </LoveButton>
+            </RatingBox>
+
+            <QuantityBox>
+              <Remove onClick={() => handleQuantity('dec')} />
+              <Qty>{quantity}</Qty>
+              <Add onClick={() => handleQuantity('inc')} />
+            </QuantityBox>
+
+            <ButtonRow>
+              <CartBtn onClick={handleAddToCart}>Add to Cart</CartBtn>
+              <BuyBtn onClick={() => setIsOrderFormOpen(true)}>Buy Now</BuyBtn>
+            </ButtonRow>
+
+          </InfoContainer>
+        </Wrapper>
+
         <CustomerReview
           comments={comments}
           newComment={newComment}
           setNewComment={setNewComment}
-          handleAddComment={handleAddComment}
-          handleEditComment={handleEditComment}
-          handleDeleteComment={handleDeleteComment}
         />
+
+        {isOrderFormOpen && (
+          <BuyNow
+            onClose={() => setIsOrderFormOpen(false)}
+            product={{ ...product, quantity }}
+          />
+        )}
+
       </Container>
     </>
   );
 };
 
-//             <Stars>{'★'.repeat(Math.floor(rating)) + (rating % 1 ? '☆' : '')}</Stars>
+export default ProductDetail;
 
 
-// Styled Components
 const Container = styled.div`
+  width: 100%;
+  min-height: 100vh;
+`;
+
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
+  padding: 15px;
+  gap: 20px;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    padding: 30px;
+    gap: 40px;
+    max-width: 1100px;
+    margin: auto;
+  }
 `;
 
-const CenteredContainer = styled.div`
+
+const ImageContainer = styled.div`
+  flex: 1;
   display: flex;
   justify-content: center;
-  width: 100%;
-`;
-
-const Content = styled.div`
-  display: flex;
-  padding: 20px;
-  gap: 20px;
-  max-width: 800px;
-  width: 100%;
 `;
 
 const Image = styled.img`
-  width: 400px;
+  width: 100%;
+  max-width: 350px;
   height: auto;
-  object-fit: cover;
   border-radius: 10px;
+  object-fit: contain;
+
+  @media (min-width: 768px) {
+    max-width: 450px;
+  }
 `;
 
-const Details = styled.div`
+const InfoContainer = styled.div`
   flex: 1;
-  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 
-const ProductName = styled.h1`
-  font-size: 2rem;
-`;
-
-const ProductDescription = styled.p`
-  font-size: 1.2rem;
-`;
-
-const ProductPrice = styled.p`
+const Title = styled.h1`
   font-size: 1.5rem;
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
+`;
+
+const Desc = styled.p`
+  font-size: 1rem;
+  color: #555;
+`;
+
+const Price = styled.p`
+  font-size: 1.3rem;
   font-weight: bold;
 `;
 
-const Rating = styled.div`
-  margin: 10px 0;
+
+
+const RatingBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 `;
 
-const Stars = styled.span`
-  font-size: 1.5rem;
-  color: #ffdd00;
-  margin-right: 10px;
+const Stars = styled.div`
+  display: flex;
 `;
 
 const LoveButton = styled.button`
   border: none;
   background: none;
   cursor: pointer;
-  color: #ff4d4d;
+  color: red;
 `;
 
-const AmountContainer = styled.div`
+
+const QuantityBox = styled.div`
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  gap: 10px;
 `;
 
-const Amount = styled.span`
-  width: 30px;
-  height: 30px;
+const Qty = styled.span`
+  width: 35px;
+  height: 35px;
   border: 1px solid teal;
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin: 0 5px;
+  align-items: center;
 `;
 
-const ButtonGroup = styled.div`
+
+
+const ButtonRow = styled.div`
   display: flex;
-  gap: 20px;
-  margin-top: 20px;
-`;
+  flex-direction: column;
+  gap: 10px;
 
-const AddToCartButton = styled.button`
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    background-color: #45a049;
+  @media (min-width: 768px) {
+    flex-direction: row;
   }
 `;
 
-const BuyNowButton = styled.button`
-  padding: 10px 20px;
-  background-color: #ff5733;
+const CartBtn = styled.button`
+  padding: 10px;
+  background: green;
   color: white;
   border: none;
   cursor: pointer;
-  &:hover {
-    background-color: #e63e00;
-  }
 `;
 
-export default ProductDetail;
+const BuyBtn = styled.button`
+  padding: 10px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  cursor: pointer;
+`;
+
+
+const Loading = styled.div`
+  padding: 20px;
+  text-align: center;
+`;

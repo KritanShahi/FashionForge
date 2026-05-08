@@ -1,53 +1,51 @@
-import Rating from '@mui/material/Rating'; // Import Rating component
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import Rating from "@mui/material/Rating";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from 'react-router-dom';
-import styled, { createGlobalStyle, keyframes } from 'styled-components';
-import ChatBot from '../component/ChatBot';
-import Navbar from '../component/Navbar';
+import { Link, useNavigate } from "react-router-dom";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
+import ChatBot from "../component/ChatBot";
+import Navbar from "../component/Navbar";
 import { logout } from "../redux/userRedux";
-import ProductBanner from './ProductBanner';
+import ProductBanner from "./ProductBanner";
+import Footer from "../component/Footer";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const quantity = useSelector(state => state.cart.quantity);
-
+  const quantity = useSelector((state) => state.cart.quantity);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/products`,
+        );
         setProducts(response.data);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
-
     fetchProducts();
   }, []);
 
-
   const handleLogout = () => {
-   
-    dispatch(logout()); 
-    navigate('/login');// Clear user state
-
+    dispatch(logout());
+    navigate("/login");
   };
 
-    // Extract images from products for the banner
-    const productImages = products.map((product) => product.image);
+  const productImages = products.map((p) => p.image);
 
   const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
     <>
       <GlobalStyle />
+
       <Container>
         <Navbar
           searchTerm={searchTerm}
@@ -55,138 +53,155 @@ const Home = () => {
           handleLogout={handleLogout}
           quantity={quantity}
         />
-              <Banner>
-          <BannerText>
-          🚚 Free Shipping on orders above Rs 500! Limited time only. 🚚
-          </BannerText>
-        </Banner>
-               {/* Dynamic Product Banner */}
-               <ProductBanner productImages={productImages} />
-        <PageTitle>Our Products</PageTitle>
-        <ProductGrid>
-          {filteredProducts.map((product) => (
-            <Link to={`/product/${product._id}`} key={product._id} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <ProductCard>
-                <ProductImage src={product.image} alt={product.name} />
-                <ProductInfo>
-                  <ProductName>{product.name}</ProductName>
-                  <ProductDescription>{product.description}</ProductDescription>
-                  <ProductPrice>Rs {product.price}</ProductPrice>
-                  <StyledRating
-                    name="product-rating"
-                    value={product.rating || 4} // Set a default rating if not provided
-                    precision={0.5}
-                    readOnly
-                  />
-                </ProductInfo>
-              </ProductCard>
-            </Link>
-          ))}
-        </ProductGrid>
-        <ChatBot />
+
+        <Main>
+          <Banner>
+            <BannerText>
+              🚚 Free Shipping on orders above Rs 500! Limited time only. 🚚
+            </BannerText>
+          </Banner>
+
+          <ProductBanner productImages={productImages} />
+
+          <PageTitle>Our Products</PageTitle>
+
+          <ProductGrid>
+            {filteredProducts.map((product) => (
+              <Link
+                to={`/product/${product._id}`}
+                key={product._id}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <ProductCard>
+                  <ProductImage src={product.image} />
+
+                  <ProductInfo>
+                    <ProductName>{product.name}</ProductName>
+                    <ProductDescription>
+                      {product.description}
+                    </ProductDescription>
+                    <ProductPrice>Rs {product.price}</ProductPrice>
+
+                    <StyledRating
+                      value={product.rating || 4}
+                      precision={0.5}
+                      readOnly
+                    />
+                  </ProductInfo>
+                </ProductCard>
+              </Link>
+            ))}
+          </ProductGrid>
+
+          <ChatBot />
+        </Main>
+
+        <Footer />
       </Container>
     </>
   );
 };
-// Keyframes for scrolling animation
-const scroll = keyframes`
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-`;
 
-// Styled Components
-const Banner = styled.div`
-  background-color: #ffc107;
-  color: #000;
-  padding: 10px 0;
-  overflow: hidden;
-  position: relative;
-`;
-
-const BannerText = styled.div`
-  display: inline-block;
-  white-space: nowrap;
-  font-size: 1.2rem;
-  font-weight: bold;
-  animation: ${scroll} 10s linear infinite;
-`;
-// Global and Styled Components
 const GlobalStyle = createGlobalStyle`
-  body, html, #root {
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
     margin: 0;
     padding: 0;
-    height: 100%;
     width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
   }
 `;
 
 const Container = styled.div`
+  width: 100vw;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+`;
+
+const Main = styled.div`
   width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const scroll = keyframes`
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+`;
+
+const Banner = styled.div`
+  background: #ffc107;
+  padding: 8px 0;
+  overflow: hidden;
+`;
+
+const BannerText = styled.div`
+  white-space: nowrap;
+  font-weight: bold;
+  animation: ${scroll} 12s linear infinite;
 `;
 
 const PageTitle = styled.h2`
   text-align: center;
-  margin: 20px 0;
+  margin: 15px 0;
 `;
 
 const ProductGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
   width: 100%;
-  flex: 1;
+  padding: 10px;
 `;
 
 const ProductCard = styled.div`
-  background-color: #f9f9f9;
+  background: #f9f9f9;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: 0.2s;
+
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
   }
 `;
 
 const ProductImage = styled.img`
   width: 100%;
-  height: 250px;
+  height: 180px;
   object-fit: contain;
 `;
 
 const ProductInfo = styled.div`
-  padding: 15px;
+  padding: 10px;
   text-align: center;
 `;
 
 const ProductName = styled.h3`
-  font-size: 1.5rem;
-  margin: 10px 0;
+  font-size: 1rem;
 `;
 
 const ProductDescription = styled.p`
-  font-size: 1rem;
+  font-size: 0.85rem;
   color: #666;
-  margin: 10px 0;
 `;
 
 const ProductPrice = styled.p`
-  font-size: 1.2rem;
   font-weight: bold;
-  margin: 10px 0;
 `;
 
 const StyledRating = styled(Rating)`
-  margin-top: 10px;
+  margin-top: 8px;
 `;
 
 export default Home;

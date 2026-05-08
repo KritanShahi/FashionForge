@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const ManageProducts = () => {
+
   const navigate = useNavigate();
   const location = useLocation();
+
   const [products, setProducts] = useState([]);
 
-  // Function to refresh the product list
+
   const refreshProductList = () => {
+
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/products`)
       .then((response) => {
@@ -20,28 +23,40 @@ const ManageProducts = () => {
       });
   };
 
-  // Fetch products on component mount or when navigating back with a refresh flag
   useEffect(() => {
     refreshProductList();
   }, [location.state?.refresh]);
 
-  // Navigate to the AddProduct page
+
+
   const handleAddProduct = () => {
-    navigate('/admin/add'); // Navigate to the AddProduct component
+    navigate('/admin/add');
   };
 
   const handleEdit = (index) => {
+
     const productToEdit = products[index];
-    navigate('/admin/edit', { state: { productId: productToEdit._id } }); // Navigate to EditProduct with productId
+
+    navigate('/admin/edit', {
+      state: {
+        productId: productToEdit._id
+      }
+    });
   };
 
   const handleDelete = (index) => {
+
     const productId = products[index]._id;
+
     axios
       .delete(`${process.env.REACT_APP_API_URL}/api/products/${productId}`)
       .then(() => {
-        const updatedProducts = products.filter((_, i) => i !== index);
+
+        const updatedProducts =
+          products.filter((_, i) => i !== index);
+
         setProducts(updatedProducts);
+
       })
       .catch((error) => {
         console.error('Error deleting product:', error);
@@ -49,316 +64,299 @@ const ManageProducts = () => {
   };
 
   const handleSelectProduct = (productId) => {
-    navigate('/admin/message', { state: { productId } }); // Navigate to MessageDashboard with productId
+
+    navigate('/admin/message', {
+      state: { productId }
+    });
   };
 
   return (
-    <Container> <Header>
-      <h2>Product Management</h2>
-      <Button onClick={handleAddProduct}>Add Product</Button>
-    </Header><Table>
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Actions</th>
-            <th>Comments</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product, index) => (
-            <tr key={product._id}>
-              <td>
-                <img src={product.image} alt={product.name} width="50" />
-              </td>
-              <td>{product.name}</td>
-              <td>{product.description}</td>
-              <td>{product.price}</td>
-              <td>
-                <ActionButton onClick={() => handleEdit(index)}>Edit</ActionButton>
-                <ActionButton onClick={() => handleDelete(index)}>Delete</ActionButton>
-              </td>
-              <td>
-                <ActionButton onClick={() => handleSelectProduct(product._id)}>View Comments</ActionButton>
-              </td>
+
+    <Container>
+
+
+
+      <Header>
+
+        <Title>Product Management</Title>
+
+        <Button onClick={handleAddProduct}>
+          Add Product
+        </Button>
+
+      </Header>
+
+
+      <TableWrapper>
+
+        <Table>
+
+          <thead>
+
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Actions</th>
+              <th>Comments</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+
+          </thead>
+
+          <tbody>
+
+            {products.map((product, index) => (
+
+              <tr key={product._id}>
+
+                <td>
+                  <ProductImage
+                    src={product.image}
+                    alt={product.name}
+                  />
+                </td>
+
+                <td>{product.name}</td>
+
+                <DescriptionCell>
+                  {product.description}
+                </DescriptionCell>
+
+                <td>Rs {product.price}</td>
+
+                <td>
+
+                  <ButtonGroup>
+
+                    <ActionButton
+                      onClick={() => handleEdit(index)}
+                    >
+                      Edit
+                    </ActionButton>
+
+                    <DeleteButton
+                      onClick={() => handleDelete(index)}
+                    >
+                      Delete
+                    </DeleteButton>
+
+                  </ButtonGroup>
+
+                </td>
+
+                <td>
+
+                  <CommentButton
+                    onClick={() =>
+                      handleSelectProduct(product._id)
+                    }
+                  >
+                    View Comments
+                  </CommentButton>
+
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </Table>
+
+      </TableWrapper>
+
     </Container>
   );
 };
 
-// Styled-components for styling
+
+
 const Container = styled.div`
-  padding: 20px;
+  width: 100%;
+  padding: 15px;
+  overflow-x: hidden;
+
+  @media (min-width: 768px) {
+    padding: 25px;
+  }
 `;
 
+
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 15px;
+  flex-wrap: wrap;
+
+  margin-bottom: 20px;
+`;
+
+const Title = styled.h2`
+  font-size: 1.5rem;
+  color: #222;
+
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
+`;
+
+
+
 const Button = styled.button`
-  padding: 10px 20px;
+  padding: 10px 18px;
+
   background-color: #4caf50;
   color: white;
+
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+
   cursor: pointer;
-  margin-bottom: 20px;
+
+  font-size: 0.95rem;
+
+  transition: 0.2s ease;
+
+  white-space: nowrap;
+
   &:hover {
     background-color: #45a049;
   }
 `;
 
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  th,
-  td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-`;
-
 const ActionButton = styled.button`
-  padding: 5px 10px;
-  margin: 0 5px;
+  padding: 8px 14px;
+
   background-color: #2196f3;
   color: white;
+
   border: none;
-  border-radius: 3px;
+  border-radius: 6px;
+
   cursor: pointer;
+
+  font-size: 0.9rem;
+
+  white-space: nowrap;
+
   &:hover {
     background-color: #1976d2;
   }
 `;
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+const DeleteButton = styled(ActionButton)`
+  background-color: #f44336;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
 `;
+
+const CommentButton = styled.button`
+  padding: 8px 14px;
+
+  background-color: #673ab7;
+  color: white;
+
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  font-size: 0.9rem;
+
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #512da8;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+`;
+
+
+const TableWrapper = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  background: white;
+  border-radius: 12px;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+  /* scrollbar */
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cfcfcf;
+    border-radius: 10px;
+  }
+`;
+
+const Table = styled.table`
+  width: 100%;
+  min-width: 950px;
+  border-collapse: collapse;
+
+  background: white;
+
+  th,
+  td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #f4f5fc;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  tbody tr:hover {
+    background-color: #fafafa;
+  }
+
+  @media (max-width: 768px) {
+
+    th,
+    td {
+      padding: 12px;
+      font-size: 0.9rem;
+    }
+  }
+`;
+
+const DescriptionCell = styled.td`
+  max-width: 280px;
+  min-width: 220px;
+
+  word-break: break-word;
+`;
+
+const ProductImage = styled.img`
+  width: 65px;
+  height: 65px;
+
+  object-fit: cover;
+
+  border-radius: 8px;
+`;
+
 export default ManageProducts;
-
-
-// import React, { useEffect, useState } from 'react'; 
-// import styled from 'styled-components';
-// import axios from 'axios';
-// import { useNavigate } from 'react-router-dom'; // Import useNavigate
-
-// const ManageProducts = () => {
-//   const navigate = useNavigate(); // Initialize useNavigate
-//   const [products, setProducts] = useState([]);
-//   const [newProduct, setNewProduct] = useState({ name: '', description: '', price: '', image: '' });
-//   const [editing, setEditing] = useState(false);
-//   const [editingIndex, setEditingIndex] = useState(null);
-  
-//   // Fetch products from the backend on component mount
-//   useEffect(() => {
-//     axios.get('http://localhost:8080/api/products')
-//       .then(response => {
-//         setProducts(response.data);
-//       })
-//       .catch(error => {
-//         console.error('Error fetching products:', error);
-//       });
-//   }, []);
-
-//   const handleAddProduct = () => {
-//     if (editing) {
-//       // Update product on the backend
-//       const updatedProduct = { ...newProduct, id: products[editingIndex]._id };
-//       axios.put(`http://localhost:8080/api/products/${updatedProduct.id}`, updatedProduct)
-//         .then(response => {
-//           const updatedProducts = [...products];
-//           updatedProducts[editingIndex] = response.data;
-//           setProducts(updatedProducts);
-//           setEditing(false);
-//           setEditingIndex(null);
-//         })
-//         .catch(error => {
-//           console.error('Error updating product:', error);
-//         });
-//     } else {
-//       // Add new product to the backend
-//       axios.post('http://localhost:8080/api/products', newProduct)
-//         .then(response => {
-//           setProducts([...products, response.data]);
-//         })
-//         .catch(error => {
-//           console.error('Error adding product:', error);
-//         });
-//     }
-//     setNewProduct({ name: '', description: '', price: '', image: '' });
-//   };
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setNewProduct({ ...newProduct, [name]: value });
-//   };
-
-//   const handleImageChange = (e) => {
-//     const file = e.target.files[0];
-//     const reader = new FileReader();
-//     reader.onloadend = () => {
-//       setNewProduct({ ...newProduct, image: reader.result });
-//     };
-//     if (file) {
-//       reader.readAsDataURL(file);
-//     }
-//   };
-
-//   // const handleEdit = (index) => {
-//   //   setNewProduct(products[index]);
-//   //   setEditing(true);
-//   //   setEditingIndex(index);
-//   // };
-//   const handleEdit = (index) => {
-//     const productToEdit = products[index];
-//     navigate('/admin/edit', { state: { productId: productToEdit._id } }); // Navigate to EditProduct with productId
-//   };
-  
-
-//   const handleDelete = (index) => {
-//     const productId = products[index]._id;
-//     axios.delete(`http://localhost:8080/api/products/${productId}`)
-//       .then(() => {
-//         const updatedProducts = products.filter((_, i) => i !== index);
-//         setProducts(updatedProducts);
-//       })
-//       .catch(error => {
-//         console.error('Error deleting product:', error);
-//       });
-//   };
-
-//   // Function to select a product and navigate to the MessageDashboard
-//   const handleSelectProduct = (productId) => {
-//     navigate('/admin/message', { state: { productId } }); // Navigate to MessageDashboard with productId
-//   };
-
-//   return (
-//     <Container>
-//       <h2>Product Management</h2>
-//       <Form>
-//         <Input
-//           type="text"
-//           name="name"
-//           placeholder="Product Name"
-//           value={newProduct.name}
-//           onChange={handleInputChange}
-//         />
-//         <Input
-//           type="text"
-//           name="description"
-//           placeholder="Product Description"
-//           value={newProduct.description}
-//           onChange={handleInputChange}
-//         />
-//         <Input
-//           type="text"
-//           name="price"
-//           placeholder="Product Price"
-//           value={newProduct.price}
-//           onChange={handleInputChange}
-//         />
-//         <Input
-//           type="file"
-//           name="image"
-//           onChange={handleImageChange}
-//         />
-//         <Button onClick={handleAddProduct}>{editing ? 'Save' : 'Add Product'}</Button>
-//       </Form>
-//       <Table>
-//         <thead>
-//           <tr>
-//             <th>Image</th>
-//             <th>Name</th>
-//             <th>Description</th>
-//             <th>Price</th>
-//             <th>Action</th>
-//             <th>Comments</th> {/* Add a column for comments */}
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {products.map((product, index) => (
-//             <tr key={product._id}>
-//               <td><img src={product.image} alt={product.name} width="50" /></td>
-//               <td>{product.name}</td>
-//               <td>{product.description}</td>
-//               <td>{product.price}</td>
-//               <td>
-//                 <ActionButton onClick={() => handleEdit(index)}>Edit</ActionButton>
-//                 <ActionButton onClick={() => handleDelete(index)}>Delete</ActionButton>
-//               </td>
-//               <td>
-//                 {/* Add a button to open the MessageDashboard */}
-//                 <ActionButton onClick={() => handleSelectProduct(product._id)}>View Comments</ActionButton>
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </Table>
-//     </Container>
-//   );
-// };
-
-
-
-// // Styled-components for styling
-
-// const Container = styled.div`
-//   padding: 20px;
-// `;
-
-// const Form = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 10px;
-//   margin-bottom: 20px;
-// `;
-
-// const Input = styled.input`
-//   padding: 10px;
-//   border: 1px solid #ccc;
-//   border-radius: 5px;
-// `;
-
-// const Button = styled.button`
-//   padding: 10px;
-//   background-color: #4caf50;
-//   color: white;
-//   border: none;
-//   border-radius: 5px;
-//   cursor: pointer;
-//   &:hover {
-//     background-color: #45a049;
-//   }
-// `;
-
-// const Table = styled.table`
-//   width: 100%;
-//   border-collapse: collapse;
-//   margin-top: 20px;
-//   th, td {
-//     padding: 10px;
-//     border: 1px solid #ddd;
-//     text-align: left;
-//   }
-// `;
-
-// const ActionButton = styled.button`
-//   padding: 5px 10px;
-//   margin: 0 5px;
-//   background-color: #2196F3;
-//   color: white;
-//   border: none;
-//   border-radius: 3px;
-//   cursor: pointer;
-//   &:hover {
-//     background-color: #1976D2;
-//   }
-// `;
-
-
-// export default ManageProducts;
-

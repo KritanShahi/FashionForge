@@ -1,273 +1,193 @@
-
-
-// components/Header.js
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { Badge } from '@mui/material';
-import ShoppingCartOutlined from '@mui/icons-material/ShoppingCartOutlined';
-import { useSelector } from 'react-redux'; 
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { Badge } from "@mui/material";
+import ShoppingCartOutlined from "@mui/icons-material/ShoppingCartOutlined";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ searchTerm, setSearchTerm, handleLogout, quantity }) => {
-  const currentUser = useSelector((state) => state.user.currentUser); 
+  const currentUser = useSelector((state) => state.user.currentUser);
+
   return (
     <Container>
-      <Logo to="/">Fashion Forge</Logo>
-      
+      <TopRow>
+        <Logo to="/">
+          Fashion<span>Forge</span>
+        </Logo>
+
+        <Menu>
+          <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}>
+            <MenuItem>
+              <Badge badgeContent={quantity} color="secondary">
+                <ShoppingCartOutlined />
+              </Badge>
+            </MenuItem>
+          </Link>
+
+          <Link
+            to="/orderdetails"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <MenuItemText>Orders</MenuItemText>
+          </Link>
+
+          {currentUser ? (
+            <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+          ) : (
+            <Link to="/login" style={{ textDecoration: "none" }}>
+              <LoginButton>Login</LoginButton>
+            </Link>
+          )}
+        </Menu>
+      </TopRow>
+
       <SearchBar>
         <SearchInput
           type="text"
-          placeholder="Search for products..."
+          placeholder="Search products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <SearchButton>Search</SearchButton>
       </SearchBar>
-      <Link to="/orderdetails" style={{ textDecoration: 'none', color: 'inherit' }}>
-<p>OrderDetails</p>
-</Link>
-
-      <Menu>
-
-        <Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <MenuItem>
-            <Badge badgeContent={quantity} color="secondary">
-              <ShoppingCartOutlined />
-            </Badge>
-          </MenuItem>
-        </Link>
-        {currentUser ? (
-          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-        ) : (
-          <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <LoginButton>Login / Signup</LoginButton>
-          </Link>
-        )}
-      </Menu>
     </Container>
   );
 };
 
 export default Navbar;
 
-// Styled Components
 const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 30px;
-  background-color: #333;
-  color: #fff;
   position: sticky;
   top: 0;
   z-index: 1000;
+  background: #333;
+  color: white;
+  padding: 10px 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  @media (min-width: 768px) {
+    padding: 15px 30px;
+  }
+`;
+
+const TopRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 `;
 
 const Logo = styled(Link)`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
-  color: #fff;
   text-decoration: none;
+  color: #f0d080; /* gold — "Fashion" */
+
+  span {
+    color: #fff; /* white — "Forge" */
+  }
+
+  @media (min-width: 768px) {
+    font-size: 24px;
+  }
+
   &:hover {
-    color: #ccc;
+    color: #c9a84c;
   }
 `;
 
 const SearchBar = styled.div`
   display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #f8f8f8;
-  padding: 5px 10px;
-  border-radius: 4px;
+  width: 100%;
+  gap: 6px;
 `;
 
 const SearchInput = styled.input`
+  flex: 1;
   padding: 8px;
-  font-size: 16px;
+  font-size: 14px;
   border: none;
   outline: none;
-  width: 200px;
+  border-radius: 4px;
+
+  @media (min-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const SearchButton = styled.button`
   padding: 8px 12px;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
-  background-color: #333;
+  background-color: #555;
   color: #fff;
   border: none;
   border-radius: 4px;
+
+  @media (min-width: 768px) {
+    font-size: 16px;
+  }
+
   &:hover {
-    background-color: #555;
+    background-color: #777;
   }
 `;
 
 const Menu = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
+
+  @media (max-width: 480px) {
+    gap: 6px;
+  }
 `;
 
 const MenuItem = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
+  color: white;
+`;
+
+const MenuItemText = styled.p`
+  margin: 0;
+  font-size: 14px;
+  color: white;
+
+  &:hover {
+    color: #ccc;
+  }
 `;
 
 const LogoutButton = styled.button`
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 6px 10px;
+  font-size: 14px;
   cursor: pointer;
   background-color: #ff4d4d;
-  color: #fff;
+  color: white;
   border: none;
   border-radius: 4px;
+
   &:hover {
     background-color: #ff1a1a;
   }
 `;
 
 const LoginButton = styled.button`
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 6px 10px;
+  font-size: 14px;
   cursor: pointer;
   background-color: green;
-  color: #fff;
+  color: white;
   border: none;
   border-radius: 4px;
+
   &:hover {
     background-color: #32cf0a;
   }
 `;
-
-
-/*
-const LoginButton = styled.button`
-  margin-left: 20px;
-  padding: 5px 10px;
-  border: none;
-  background-color: green;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-`;*/
-
-/*
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { Badge } from '@mui/material';
-import ShoppingCartOutlined from '@mui/icons-material/ShoppingCartOutlined';
-import { useSelector } from 'react-redux'; // Import to access user state
-
-const Navbar = ({ searchTerm, setSearchTerm, handleLogout, quantity }) => {
-  const currentUser = useSelector((state) => state.user.currentUser); // Get current user from state
-
-  return (
-    <Container>
-      <Logo to="/">Fashion Forge</Logo>
-      
-      <SearchBar>
-        <SearchInput
-          type="text"
-          placeholder="Search for products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <SearchButton>Search</SearchButton>
-      </SearchBar>
-
-      <Link to="/orderdetails" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <p>OrderDetails</p>
-      </Link>
-
-      <Menu>
-        <Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <MenuItem>
-            <Badge badgeContent={quantity} color="secondary">
-              <ShoppingCartOutlined />
-            </Badge>
-          </MenuItem>
-        </Link>
-
-        {currentUser ? (
-          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-        ) : (
-          <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <LoginButton>Login</LoginButton>
-          </Link>
-        )}
-      </Menu>
-    </Container>
-  );
-};
-
-export default Navbar;
-
-const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f8f8f8;
-`;
-
-const Logo = styled(Link)`
-  font-size: 24px;
-  font-weight: bold;
-  color: black;
-  text-decoration: none;
-`;
-
-const SearchBar = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const SearchInput = styled.input`
-  padding: 5px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-`;
-
-const SearchButton = styled.button`
-  padding: 5px 10px;
-  margin-left: 5px;
-  border: none;
-  background-color: #333;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-`;
-
-const Menu = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const MenuItem = styled.div`
-  margin-left: 20px;
-  cursor: pointer;
-`;
-
-const LogoutButton = styled.button`
-  margin-left: 20px;
-  padding: 5px 10px;
-  border: none;
-  background-color: red;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-`;
-
-const LoginButton = styled.button`
-  margin-left: 20px;
-  padding: 5px 10px;
-  border: none;
-  background-color: green;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-`;
-*/

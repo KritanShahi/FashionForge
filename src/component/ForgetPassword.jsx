@@ -3,55 +3,122 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 
 
+
 const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background-color: #f0f0f0;
+  width: 100%;
+  min-height: 100vh;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  background: #f0f0f0;
+  padding: 15px;
 `;
+
 
 const Wrapper = styled.div`
+  width: 100%;
+  max-width: 380px;
+
+  background: white;
   padding: 20px;
-  width: 25%;
-  background-color: white;
+
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    padding: 30px;
+  }
 `;
 
+
+
 const Title = styled.h1`
-  font-size: 24px;
-  font-weight: 300;
+  font-size: 22px;
+  font-weight: 400;
+  text-align: center;
 `;
+
+
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  gap: 10px;
 `;
+
 
 const Input = styled.input`
-  flex: 1;
-  min-width: 40%;
-  margin: 10px 0;
-  padding: 10px;
-`;
-
-const Button = styled.button`
   width: 100%;
-  border: none;
-  padding: 15px 20px;
-  background-color: teal;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 10px;
-  &:disabled {
-    color: green;
-    cursor: not-allowed;
+  padding: 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+
+  font-size: 14px;
+
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: teal;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 15px;
   }
 `;
 
+
+
+const Button = styled.button`
+  width: 100%;
+  padding: 12px;
+
+  background-color: teal;
+  color: white;
+
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+  font-size: 15px;
+
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #006d6d;
+  }
+`;
+
+
 const Error = styled.span`
   color: red;
+  font-size: 12px;
+  text-align: center;
 `;
+
+
+
+const StyledLink = styled(Link)`
+  text-align: center;
+  font-size: 14px;
+  color: teal;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+
 
 function ForgetPassword() {
   const [username, setUsername] = useState("");
@@ -64,88 +131,81 @@ function ForgetPassword() {
   const navigate = useNavigate();
 
   const validateForm = () => {
-    if (!username.trim()) {
-      setValidationError("Username is required.");
-      return false;
-    }
-    if (!email.trim()) {
-      setValidationError("Email is required.");
-      return false;
-    }
-    if (newPassword.length < 6) {
-      setValidationError("Password must be at least 6 characters.");
-      return false;
-    }
-    if (newPassword !== confirmPassword) {
-      setValidationError("Passwords do not match.");
-      return false;
-    }
+    if (!username.trim()) return setValidationError("Username required"), false;
+    if (!email.trim()) return setValidationError("Email required"), false;
+    if (newPassword.length < 6) return setValidationError("Min 6 chars"), false;
+    if (newPassword !== confirmPassword) return setValidationError("Passwords mismatch"), false;
+
     setValidationError("");
     return true;
   };
+
   const handleClick = async (e) => {
     e.preventDefault();
     setValidationError("");
     setServerError("");
-  
+
     if (!validateForm()) return;
-  
+
     try {
-    
-      alert('Password reset successfully.');
-      navigate('/login');
+      alert("Password reset successfully");
+      navigate("/login");
     } catch (err) {
-      if (err.response) {
-        console.error('Error response:', err.response);
-        setServerError(err.response.data.message || "An error occurred.");
-      } else if (err.request) {
-        console.error('Error request:', err.request);
-        setServerError("No response from server. Please try again later.");
-      } else {
-        console.error('Error:', err.message);
-        setServerError("An unexpected error occurred.");
-      }
+      setServerError("Something went wrong");
     }
   };
-  
-  
+
   return (
     <Container>
+
       <Wrapper>
+
         <Title>Forget Password</Title>
+
         <Form>
+
           <Input
             placeholder="Username"
-            onChange={(e) => setUsername(e.target.value)}
             value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
+
           <Input
             type="email"
             placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
             value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
+
           <Input
+            type="password"
             placeholder="New Password"
-            type="password"
-            onChange={(e) => setNewPassword(e.target.value)}
             value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
           />
+
           <Input
-            placeholder="Confirm Password"
             type="password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
             value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
+
           {validationError && <Error>{validationError}</Error>}
           {serverError && <Error>{serverError}</Error>}
+
           <Button onClick={handleClick}>SUBMIT</Button>
-          <Link to="/signup">CREATE A NEW ACCOUNT</Link>
+
+          <StyledLink to="/signup">
+            Create new account
+          </StyledLink>
+
         </Form>
+
       </Wrapper>
+
     </Container>
   );
 }
 
 export default ForgetPassword;
-
